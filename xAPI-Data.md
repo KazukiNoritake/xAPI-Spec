@@ -108,8 +108,7 @@
 <a name="documents"></a>
 ## <a name="1.0">1.0</a> Documents
 
-The Experience API provides a facility for Learning Record Providers to save arbitrary data in the form of documents.  This data 
-is largely unstructured, which allows for flexibility.  Specifics on document behaviors can be found in [Part 3](./xAPI-Communication.md#doctransfer) 
+Experience APIは、Learning Record Providerが任意のデータをドキュメントの形で保存するための機能を提供します。 このデータ は大部分が非構造化であるため、柔軟に対応することができます。 ドキュメントの動作に関する詳細は、[Part 3](./xAPI-Communication.md#doctransfer) 
 
 <a name="statements"></a> 
 
@@ -118,138 +117,95 @@ is largely unstructured, which allows for flexibility.  Specifics on document be
 <a name="statement-purpose"></a> 
 ### <a name="2.1">2.1</a> Purpose
 
-Statements are the evidence for any sort of experience or event which is to be tracked in xAPI. 
-While Statements follow a machine readable JSON format, they can also easily be described
-using natural language. This can be extremely useful for the design process. Statements are 
-meant to be aggregated and analyzed to provide larger meaning for the overall experience than 
-just the sum of its parts.
+ステートメントは、xAPIで追跡されるあらゆる種類の経験やイベントの証拠となるものである。ステートメントは、機械可読のJSON形式に従っているが、自然言語を使用して簡単に記述することもできる。これは、設計プロセスで非常に有用である。ステートメントは、集約して分析することで、部分の総和よりも全体的な体験に大きな意味を与えることを意図している。
 
 <a name="dataconstraints"></a>
 ### <a name="2.2">2.2</a> Formatting Requirements
 
 ###### <a name="2.2.s1"></a>Details
 
-All of the properties used in Statements are restricted to certain data types. For clarity, key requirements are 
-documented here, emphasizing where xAPI components have a responsibility to act in certain ways to be considered 
-conformant to this specification.
+ステートメントで使用されるすべてのプロパティは、特定のデータ型に制限されています。分かりやすくするために、主要な要件をここに文書化し、xAPIコンポーネントがこの仕様に適合しているとみなされるために特定の方法で行動する責任がある場所を強調する。
 
 ###### <a name="2.2.s2"></a>Requirements
 
-* <a name="2.2.s2.b1"></a>Statements and other objects SHOULD NOT include properties with a value of an empty object. 
-* <a name="2.2.s2.b2"></a>A Statement MUST use each property no more than one time.
-* <a name="2.2.s2.b3"></a>A Statement MUST use "actor", "verb", and "object".
-* <a name="2.2.s2.b4"></a>A Statement MAY use its properties in any order.
-* <a name="2.2.s2.b5"></a>The LRS MUST NOT return a different serialization of any properties except those 
-[listed as exceptions](#statement-immutability-and-exceptions).
+* <a name="2.2.s2.b1"></a>ステートメントと他のオブジェクトは、空のオブジェクトの値を持つプロパティを含むべきではない（SHOULD NOT）。
+* <a name="2.2.s2.b2"></a>ステートメントは、各プロパティを一度しか使用してはならない（MUST）。
+* <a name="2.2.s2.b3"></a>ステートメントは、"actor"、"verb"、"object "を使用しなければならない（MUST）。
+* <a name="2.2.s2.b4"></a>ステートメントは、そのプロパティを任意の順序で使用することができます（MAY）。
+* <a name="2.2.s2.b5"></a>LRSは、[例外として列挙されたもの](#statement-immutability-and-exceptions)を除き、いかなるプロパティの異なるシリアライズも返してはならない（MUST NOT）。
 
 ###### <a name="2.2.s3"></a>Learning Record Provider Requirements
 
-The following requirements reiterate especially important requirements already included elsewhere, to emphasize,
-clarify, and provide implementation guidance.  Some types of validation, such as complete IRI validation and validation 
-that properties appear only once, are extremely difficult, so much of the burden 
-for ensuring data portability is on the Learning Record Provider.
+以下の要件は、他の場所に既に含まれている特に重要な要件を繰り返し、強調し、明確にし、実装のガイダンスを提供するものである。完全なIRIの検証やプロパティが一度しか表示されないことの検証など、一部の種類の検証は非常に困難であるため、データの移植性を確保するための負担は、学習記録プロバイダに多くかかっている。
 
-* <a name="2.2.s3.b1"></a>Values requiring IRIs MUST be sent with valid IRIs. 
-* <a name="2.2.s3.b2"></a>Keys of language maps MUST be sent with valid [RFC 5646](http://tools.ietf.org/html/rfc5646) 
-language tags, for similar reasons.
-* <a name="2.2.s3.b3"></a>A library SHOULD be used to construct IRIs, as opposed to string concatenation. 
-* <a name="2.2.s3.b4"></a>Values SHOULD be considered to be case sensitive unless specified otherwise. 
-* <a name="2.2.s3.b5"></a>Lowercase SHOULD be used to send case insensitive data.
-* <a name="2.2.s3.b6"></a>Additional properties SHOULD* NOT be added to Statements unless explicitly allowed by this specification. 
-* <a name="2.2.s3.b7"></a>A property SHOULD not occur multiple times in an object. If properties are used multiple times 
-within an object, the behavior of the LRS is undefined; it is expected that most LRSs will use existing JSON parsing 
-functionality of whichever code languages they use. 
+* <a name="2.2.s3.b1"></a>IRIを必要とする値は、有効なIRIで送られなければならない[MUST]。
+* <a name="2.2.s3.b2"></a>言語マップのキーは、同様の理由で、有効な [RFC 5646](http://tools.ietf.org/html/rfc5646) 言語タグで送られなけれ ばならない[MUST]。
+* <a name="2.2.s3.b3"></a>IRIを構築するために、文字列の連結ではなく、ライブラリを使用すべきである (SHOULD)。
+* <a name="2.2.s3.b4"></a>値は、特に指定されない限り、大文字と小文字を区別するとみなされる べきである([)SHOULD)。
+* <a name="2.2.s3.b5"></a>大文字小文字を区別しないデータを送信する場合は、小文字を使用すべきです(SHOULD)。
+* <a name="2.2.s3.b6"></a>この仕様で明示的に許可されていない限り、ステートメントに追加のプロパティを追加すべきではない(SHOULD* NOT)。
+* <a name="2.2.s3.b7"></a>プロパティは、1つのオブジェクトの中で複数回出現してはならない。もし、プロパティがオブジェクト内で複数回使用された場合、LRSの動作は未定義です。ほとんどのLRSは、使用するコード言語の既存のJSONパース機能を使用することが期待されます。(SHOULD not)
 
-__Note:__ The LRS is recommended to reject Statements containing additional properties. Additional properties in 
-Statements would mean that the Statement would not be interoperable with all LRSs. 
+__Note:__ LRSは、追加プロパティを含むステートメントを拒否することが推奨される。ステートメントに追加のプロパティがある場合、そのステートメントはすべての LRS と相互運用できないことになる。
 
 ###### <a name="2.2.s4"></a>LRS Requirements
 
-* <a name="2.2.s4.b1"></a>The LRS MUST reject Statements
-    * <a name="2.2.s4.b1.b1"></a>with any null values (except inside extensions).
-    * <a name="2.2.s4.b1.b2"></a><a name="2.2.s4.b1.b3"></a>where the wrong data type is used, for example: 
-        * with strings where numbers are required, even if those strings contain numbers, or 
-        * with strings where booleans are required, even if those strings contain booleans.
-    * <a name="2.2.s4.b1.b4"></a>with any non-format-following key or value, including the empty string, where a
-      string with a particular format (such as mailto IRI, UUID, or IRI) is required.
-    * <a name="2.2.s4.b1.b5"></a>where the case of a key does not match the case specified in this specification.
-    * <a name="2.2.s4.b1.b6"></a>where the case of a value restricted to enumerated values does not match
-      an enumerated value given in this specification exactly.
-    * <a name="2.2.s4.b1.b7"></a>where a key or value is not allowed by this specification.
-    * <a name="2.2.s4.b1.b8"></a>containing IRL or IRI values without a scheme.
-* <a name="2.2.s4.b2"></a>The LRS MUST at least validate that the sequence of token lengths for language map keys
-matches the [RFC 5646](http://tools.ietf.org/html/rfc5646) standard.
-* <a name="2.2.s4.b3"></a>The LRS MUST process and store numbers with at least the precision of IEEE 754 32-bit
-floating point numbers.
-* <a name="2.2.s4.b4"></a>The LRS MUST validate parameter values to the same standards required for values of the
-same types in Statements. __Note:__ string parameter values are not quoted as they are in JSON.
-* <a name="2.2.s4.b5"></a>The LRS SHOULD treat all values as case sensitive unless specified otherwise.
-* <a name="2.2.s4.b6"></a>The LRS MAY use best-effort validation for IRL and IRI formats to satisfy the
-non-format-following rejection requirement.
-* <a name="2.2.s4.b7"></a>The LRS MAY use best-effort validation for language map keys to satisfy the
-non-format-following rejection requirement.
-* <a name="2.2.s4.b8"></a>Additional properties SHOULD* NOT be added to Statements and other objects unless explicitly 
-allowed by this specification and the LRS SHOULD* reject Statements containing such additional properties.
+* <a name="2.2.s4.b1"></a>LRS は次のようなステートメントを拒否しなければならない (MUST)。
+    * <a name="2.2.s4.b1.b1"></a>null値を含むステートメント（拡張機能を除く）。
+    * <a name="2.2.s4.b1.b2"></a><a name="2.2.s4.b1.b3"></a>間違ったデータ型が使用されている場合（例↓）。
+        * 数値が要求される文字列で、その文字列が数値を含んでいる、または
+        * 文字列が数値を含んでいても、数値が要求される文字列、または文字列がブーリアン値を含んでいても、ブーリアン値が要求される文字列。
+    * <a name="2.2.s4.b1.b4"></a>特定のフォーマット（mailto IRI、UUID、IRIなど）を持つ文字列が必要な場合、空文字列を含む、フォーマットに従わないキーや値を使用した場合。
+    * <a name="2.2.s4.b1.b5"></a>キーの大文字と小文字が，本仕様で規定する大文字と一致しない場合。
+    * <a name="2.2.s4.b1.b6"></a>列挙された値に限定された値の大文字と小文字が，本仕様で規定する列挙された値と完全に一致しない場合。
+    * <a name="2.2.s4.b1.b7"></a>キーまたは値が本仕様で許可されていない場合。
+    * <a name="2.2.s4.b1.b8"></a>スキームを持たないIRLまたはIRIの値を含む場合。
+* <a name="2.2.s4.b2"></a>LRSは少なくとも言語マップのキーのトークン長のシーケンスが[RFC 5646](http://tools.ietf.org/html/rfc5646)標準と一致することを 検証しなければならない(MUST)。
+* <a name="2.2.s4.b3"></a>LRSは少なくともIEEE754の32ビット浮動小数点数の精度で数値を処理し、保存しなけれ ばならない(MUST)。
+* <a name="2.2.s4.b4"></a>LRSは、ステートメントで同じ型の値に要求されるのと同じ基準でパラメータ値を検証しなければならない(MUST)。__Note:__ 文字列のパラメータ値はJSONで引用符で囲まれていない。
+* <a name="2.2.s4.b5"></a>LRSは特に指定がない限り、すべての値を大文字と小文字を区別して扱うべきである(SHOULD)。
+* <a name="2.2.s4.b6"></a>LRSは非形式追従拒絶の要件を満たすために、IRLとIRIの形式に対して最善の検証を用いてもよい(MAY)。
+* <a name="2.2.s4.b7"></a>LRSは言語マップのキーについて、非フォーマット追従拒否の要求を満たすために、ベストエフォート検証を使用してもよい(MAY)。
+* <a name="2.2.s4.b8"></a>本仕様で明示的に許可されていない限り、ステートメントやその他のオブジェクトに追加プロパティを追加すべきではなく、LRSはそのような追加プロパティを含むステートメントを拒否すべきである（SHOULD*）。
 
 <a name="lifecycle"></a>
 
 ### <a name="2.3">2.3</a> Statement Lifecycle
 
-Statements are information about a tracked learning experience. Typically, the information represented in the 
-Statement has already happened. Thus, the natural language used in "display" or in the human-readable portion of 
-the Verb id will usually use the past tense.
+ステートメントは、追跡された学習経験に関する情報です。通常、Statementで表される情報は、すでに起こったことである。したがって、「表示」またはVerb idの人間が読める部分で使用される自然言語は、通常、過去形を使用する。
 
-Statements are expected to be permanent. The only way to undo a Statement within this specification is to 
-[void it](#voided). Voiding does not destroy a Statement, rather indicates the evidence in the Statement is to be disregarded.
+ステートメントは永続的であることが期待される。この仕様の中でStatementを元に戻す唯一の方法は、それを無効にすることである[void it](#voided)。無効化は、ステートメントを破壊するのではなく、ステートメント内の証拠を無視することを示す。
 
 <a name="statement-immutability-and-exceptions"></a>
 
 #### <a name="2.3.1">2.3.1</a> Statement Immutability
 
-Statements are immutable (they cannot be changed). The following are exceptions or areas not covered by this rule:
+ステートメントは不変である（変更できない）。以下は例外またはこのルールが適用されない領域である。
 
-* <a name="2.3.1.b1"></a>Potential or required assignments of properties during LRS processing 
-("id", "authority", "stored", "timestamp", "version"). 
+* <a name="2.3.1.b1"></a>LRS処理中のプロパティの潜在的または必須割り当て（"id", "authority", "stored", "timestamp", "version"）。
 
-* <a name="2.3.1.b2"></a>Activity Definitions referenced by a Statement. The content of Activity Definitions that are 
-referenced in Statements is not considered part of the Statement itself. This means a deep serialization of a Statement 
-into JSON will change if the referenced Activity Definition changes (see the [Statement Resource's](./xAPI-Communication.md#stmtres) "format" 
-parameter for details).  
+* <a name="2.3.1.b2"></a>ステートメントから参照されるアクティビティ定義。ステートメントで参照されるアクティビティ定義のコンテンツは、ステートメント自体の一部とはみなされません。つまり、参照されるアクティビティ定義が変更されると、Statement の JSON への深いシリアライズが変更されます（詳細は [Statement Resource's](./xAPI-Communication.md#stmtres)の "format" パラメータを参照してください）。
 
-* <a name="2.3.1.b3"></a>Verbs referenced by a Statement. The "display" property of the Verb is not considered 
-part of the Statement itself (see the [Statement Resource's](./xAPI-Communication.md#stmtres) "format" parameter for details). 
+* <a name="2.3.1.b3"></a>ステートメントによって参照される動詞。Verb の "display" プロパティは、Statement 自体の一部とは見なされません（詳細は [Statement Resource's](./xAPI-Communication.md#stmtres)の "format" パラメータを参照してください）。
 
-* <a name="2.3.1.b4"></a>Serialization of Timestamp data. This is not considered part of the immutable Statement itself. 
-For example, the "timestamp" and "stored" properties of a Statement can be returned in a different timezone to the one with 
-which they were stored so long as the point in time referenced is not affected. 
-See [2.4.7 Timestamp](#timestamp) and [2.4.8 Stored](#stored) for details. 
+* <a name="2.3.1.b4"></a>Timestampデータのシリアライズ。これは、イミュータブルなStatement自体の一部とはみなされない。例えば、Statementの "timestamp "および "stored "プロパティは、参照する時点に影響がない限り、それらが保存されたものとは異なるタイムゾーンで返される可能性があります。詳しくは[2.4.7 Timestamp](#timestamp)と[2.4.8 Stored](#stored)を参照してください。
 
-* <a name="2.3.1.b5"></a>Serialization of un-ordered lists. The list of Agents in a Group is not considered to be an ordered 
-list.  Thus, the LRS can return this list of Agents in any order. See [Groups](#group).
+* <a name="2.3.1.b5"></a>順序不同のリストのシリアライズ。グループ内のエージェントのリストは順序付きリストとはみなされない。したがって、LRSはこのAgentのリストを任意の順序で返すことができます。[Groups](#group).を参照してください。
 
-* <a name="2.3.1.b6"></a>Attachments. These are not part of Statements and an LRS will return Statements without 
-Attachments when a Client requests them (see the [Statement Resource's](./xAPI-Communication.md#stmtres) "attachments" parameter for details).
+* <a name="2.3.1.b6"></a>アタッチメント。これらはステートメントの一部ではなく、クライアントが要求した場合、LRSは添付ファイルなしのステートメントを返します（詳細は[Statement Resource's](./xAPI-Communication.md#stmtres)の「attachments」パラメータを参照）。
 
-* <a name="2.3.1.b7"></a>Case sensitivity. Some properties are case insensitive and changes in case therefore do not affect 
-immutability. For example, the domain portion an e-mail address is case insensitive. It is recommended to use lowercase 
-for any case insensitive text. 
+* <a name="2.3.1.b7"></a>大文字と小文字の区別。一部のプロパティは大文字と小文字を区別せず、大文字と小文字の違いは不変性に影響を与えない。例えば、電子メールアドレスのドメイン部分は大文字と小文字を区別しない。大文字小文字を区別しないテキストは、小文字を使用することが推奨される。
 
-The following explicitly are **not** exceptions and **are** covered by this rule:
+以下のものは例外**ではなく**、このルールが適用される。
 
-* <a name="2.3.1.b8"></a>Result Duration. Due to variable lengths of months, years and even minutes and the flexible nature of the 
-"timestamp" property as representing either the start, middle or end of the experience, it is not possible for 
-an LRS to accurately deserialize the Result Duration and convert between units of time. For this reason, the 
-Result Duration is considered a string for purposes of Statement comparison. 
+* <a name="2.3.1.b8"></a>結果の期間。月、年、そして分単位まで様々な長さがあり、また "timestamp "プロパティが経験の開始、中間、終了を表すという柔軟な性質のため、LRS が結果期間を正確にデシリアライズして時間の単位間で変換することは不可能である。このため、ステートメント比較の目的上、結果期間は文字列とみなされる。
 
 <a name="statement-comparison-requirements"></a>
 ###### <a name="2.3.1.s9"></a>Statement Comparision Requirements
-There are a number of scenarios outlined in this specification which require Statements to be
-compared to see if they match. In these scenarios, the following rules apply:
+本仕様では、ステートメントが一致するかどうかを比較する必要があるシナリオがいくつかある。これらのシナリオでは、以下のルールが適用される。
 
-* <a name="2.3.1.s9.b1"></a>Differences which could have been caused by 
-[exceptions to Statement immutability](#statement-immutability-and-exceptions) MUST be ignored.
-* <a name="2.3.1.s9.b2"></a>Differences relating to a different serialization of any properties not
-[listed as exceptions](#statement-immutability-and-exceptions) MUST not be ignored. 
+* <a name="2.3.1.s9.b1"></a>ステートメントの[不変性の例外](#statement-immutability-and-exceptions)によって引き起こされた可能性のある差分は、無視しなければならない（MUST）。
+* <a name="2.3.1.s9.b2"></a>[例外としてリスト](#statement-immutability-and-exceptions)されていないプロパティの異なるシリアライゼーションに関連する差分は、無視してはならない（MUST）。
 
 <a name="voided"></a>
 
@@ -257,40 +213,26 @@ compared to see if they match. In these scenarios, the following rules apply:
 
 ###### <a name="2.3.2.s1"></a>Rationale
 
-The certainty that an LRS has an accurate and complete collection of data is guaranteed by the fact that Statements 
-cannot be logically changed or deleted. This immutability of Statements is a key factor in enabling the distributed 
-nature of Experience API.
+LRS が正確かつ完全なデータの集合体であることは、ステートメントが論理的に変更または削除できない ことによって保証される。ステートメントのこの不変性は、Experience APIの分散性を可能にする重要な要素である。
 
-However, not all Statements are perpetually valid once they have been issued. Mistakes or other factors could dictate 
-that a previously made Statement is marked as invalid. This is called "voiding a Statement" and the reserved 
-Verb `http://adlnet.gov/expapi/verbs/voided` is used for this purpose. Any Statement that voids another
-cannot itself be voided.
+しかし、一度発行されたStatementsがすべて永久に有効であるとは限りません。間違いやその他の要因によって、以前に作成されたStatementが無効とされることがあります。これは「ステートメントの無効化」と呼ばれ、予約済みのVerb `http://adlnet.gov/expapi/verbs/voided`がこの目的で使用される。他のステートメントを無効化するステートメントは、それ自体を無効化することはできない。
 
 ###### <a name="2.3.2.s2"></a>Requirements
 
-* <a name="2.3.2.s2.b1"></a>When issuing a Statement that voids another, the Object of that voiding Statement MUST have 
-the "objectType" property set to `StatementRef`.
-* <a name="2.3.2.s2.b2"></a>When issuing a Statement that voids another, the Object of that voiding Statement MUST specify 
-the id of the Statement-to-be-voided by its "id" property.
-* <a name="2.3.2.s2.b3"></a>An LRS MUST consider a Statement it contains voided if and only if the Statement is not itself 
-a voiding Statement and the LRS also contains a voiding Statement referring to the first Statement.
-* <a name="2.3.2.s2.b4"></a>Upon receiving a Statement that voids another, the LRS SHOULD reject the entire request which 
-includes the voiding Statement with `403 Forbidden` if the request is not from a source authorized to void Statements.
-* <a name="2.3.2.s2.b5"></a>Upon receiving a Statement that voids another, the LRS SHOULD NOT* reject the request on the 
-grounds of the Object of that voiding Statement not being present. 
-* <a name="2.3.2.s2.b6"></a>Upon receiving a Statement that voids another, the LRS MAY roll back any changes to Activity or 
-Agent definitions which were introduced by the Statement that was just voided.
-* <a name="2.3.2.s2.b7"></a>A Learning Record Provider that wants to "unvoid" a previously voided Statement SHOULD issue 
-that Statement again under a new id.
+* <a name="2.3.2.s2.b1"></a>他のステートメントを無効にするステートメントを発行する場合、その無効にするステートメントのオブジェクトは、"objectType "プロパティが StatementRef に設定されていなければなりません（MUST）。
+* <a name="2.3.2.s2.b2"></a>他のステートメントを無効にするステートメントを発行する場合、その無効にするステートメントのオブジェクトは、"objectType "プロパティが StatementRef に設定されていなければなりません（MUST）。
+* <a name="2.3.2.s2.b3"></a>LRSは、そのステートメントがそれ自体無効なステートメントではなく、LRSが最初のステートメントを参照する無効なステートメントを含む場合にのみ、それが含むステートメントを無効とみなさなければならない（MUST）。
+* <a name="2.3.2.s2.b4"></a>他のステートメントを無効にするステートメントを受信すると、LRSは、リクエストがステ ートメントを無効にすることを許可されたソースからのものでない場合、`403 Forbidden` で無効にするステ ートメントを含むリクエスト全体を拒否するべきである(SHOULD)。
+* <a name="2.3.2.s2.b5"></a>他のステートメントを無効にするステートメントを受信した場合、LRSはその無効にするステートメントのオブジェクトが存在しないことを理由にリクエストを拒否すべきではない(SHOULD NOT* )。
+* <a name="2.3.2.s2.b6"></a>別のステートメントを無効化するステートメントを受信した場合、LRS は無効化されたステートメントによってもたらされたアクティビティまたはエージェント定義の変更をすべてロールバックしてもよい（MAY）。
+* <a name="2.3.2.s2.b7"></a>以前に無効化されたステートメントを "無効化 "したい学習記録プロバイダは、新しいIDでそのステートメントを再度発行すべきである。
 
-__Note:__ See ["Statement References"](#stmtref) in [When the "Object" is a Statement](#stmtasobj) 
-for details about making references to other Statements.  To see how voided statements behave when queried, 
-See [StatementRef](./xAPI-Communication.md#queryStatementRef) in Part 3).
+__Note:__ 他のステートメントへの参照の詳細については、[オブジェクト "がステートメントの場合](#stmtasobj) の["Statement References"](#stmtref)を参照してください。無効化されたステートメントがクエリされたときにどのように動作するかについては、パート 3の[StatementRef](./xAPI-Communication.md#queryStatementRef)を参照してください。
+
 
 ###### <a name="2.3.2.s3"></a>Example
 
-This example Statement voids a previous Statement which it identifies with the Statement id "e05aa883-acaf-40ad-bf54-02c8ce485fb0".
-
+この例のステートメントは、ステートメントID "e05aa883-acaf-40ad-bf54-02c8ce485fb0" で識別される以前のステートメントを無効にするものである。
 ```
 {
 	"actor" : {
@@ -319,52 +261,47 @@ The details of each property of a Statement are described in the table below.
 <table>
 	<tr><th>Property</th><th>Type</th><th>Description</th><th>Required</th></tr>
 	<tr id="2.4.s1.table1.row1"><td>id</td><td>UUID</td>
-	<td>UUID assigned by LRS if not set by the Learning Record Provider.</td>
+	<td>学習記録プロバイダで設定されていない場合、LRSが割り当てるUUID。</td>
 	<td>Recommended</td></tr>
 	<tr id="2.4.s1.table1.row2"><td><a href="#actor">actor</a></td><td>Object</td>
-	<td>Whom the Statement is about, as an <a href="#agent">Agent</a> or 
-		<a href=#group>Group</a> Object.</td>
+	<td>ステートメントの対象者（<a href="#agent">Agent</a>または<a href=#group>Group</a> Object.）。</td>
 	<td>Required</td></tr>
 	<tr id="2.4.s1.table1.row3"><td><a href="#verb">verb</a></td><td>Object</td>
-	<td>Action taken by the Actor.</td>
+	<td>アクターがとった行動</td>
 	<td>Required</td></tr>
 	<tr id="2.4.s1.table1.row4"><td><a href="#object">object</a></td><td>Object</td>
-	<td>Activity, Agent, or another Statement that is the Object of the Statement. 
-	</td>
+	<td>アクティビティ、エージェント、またはステートメントの対象である別のステートメント</td>
 	<td>Required</td></tr>
 	<tr id="2.4.s1.table1.row5"><td><a href="#result">result</a></td><td>Object</td>
-	<td>Result Object, further details representing a measured outcome.</td>
+	<td>Result オブジェクト、測定された結果を表す詳細</td>
 	<td>Optional</td></tr>
 	<tr id="2.4.s1.table1.row6"><td><a href="#context">context</a></td><td>Object</td>
-	<td>Context that gives the Statement more meaning. Examples: a team the Actor is 
-	working with, altitude at which a scenario was attempted in a flight simulator.</td>
+	<td>ステートメントをより意味深いものにする文脈。例：アクターが一緒に仕事をしているチーム、フライトシミュレータでシナリオを試行したときの高度</td>
 	<td>Optional</td></tr>
 	<tr id="2.4.s1.table1.row7"><td><a href="#timestamp">timestamp</a></td><td><a href="#timestamps">Timestamp</a></td>
-	<td>Timestamp of when the events described within this Statement occurred. Set by the LRS if not provided.</td>
+	<td>このステートメント内に記述されたイベントが発生したときのタイムスタンプ。提供されない場合、LRSによって設定される</td>
 	<td>Optional</td></tr>
 	<tr id="2.4.s1.table1.row8"><td><a href="#stored">stored</a></td><td><a href="#timestamps">Timestamp</a></td>
-	<td>Timestamp of when this Statement was recorded. Set by LRS.</td>
+	<td>このステートメントが記録された時のタイムスタンプ。LRSによって設定される</td>
 	<td>Set by LRS</td></tr>
 	<tr id="2.4.s1.table1.row9"><td><a href="#authority">authority</a></td><td>Object</td>
-	<td>Agent or Group who is asserting this Statement is true. Verified by the LRS based on 
-	authentication. Set by LRS if not provided or if a strong trust relationship between the Learning Record Provider 
-	and LRS has not been established.</td>
+	<td>このステートメントが真実であることを表明しているAgentまたはGroup。認証に基づきLRSによって検証される。提供されない場合、またはLRPとLRSの間に強い信頼関係が確立されていない場合、LRSによって設定される</td>
 	<td>Optional</td></tr>
 	<tr id="2.4.s1.table1.row10"><td><a href="#version">version</a></td><td>Version</td>
-	<td>The Statement’s associated xAPI version, formatted according to <a href="http://semver.org/spec/v1.0.0.html">Semantic Versioning 1.0.0</a>.</td>
+	<td><a href="http://semver.org/spec/v1.0.0.html">Semantic Versioning 1.0.0</a>に従ってフォーマットされた、ステートメントの関連するxAPIバージョン。</td>
 	<td>Not Recommended</td></tr>
 	<tr id="2.4.s1.table1.row11">
 		<td><a href="#attachments">attachments</a></td>
 		<td>Ordered array of Attachment Objects</td>
-	    <td>Headers for Attachments to the Statement</td>
+	    <td>ステートメントに添付されるヘッダー</td>
 	<td>Optional</td></tr>
 </table>
 
 ###### <a name="2.4.s2"></a>Example
 
-An example of the simplest possible Statement using all properties that MUST or SHOULD be used.
-It is recommended to also populate optional properties where relevant. 
-When this Statement is returned from the LRS it will include some additional properties added by the LRS.  
+使用しなければならない（MUST）または使用すべきである（SHOULD）すべてのプロパティを使用した、最も単純なステートメントの例です。
+関連する場合は、オプションのプロパティも入力することが推奨される。
+このステートメントがLRSから返されるとき、LRSによって追加されたいくつかのプロパティが含まれる。 
 ```
 {
     "id": "12345678-1234-5678-1234-567812345678",
@@ -390,20 +327,19 @@ See [Appendix A: Example Statements](#Appendix2A) for more examples.
 
 ###### <a name="2.4.1.s1"></a>Description
 
-A UUID (all versions of variant 2 in [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt) are valid, and the UUID MUST 
-be in standard string form).
+UUID ([RFC 4122](http://www.ietf.org/rfc/rfc4122.txt)のvariant 2のすべてのバージョンが有効で、UUIDは標準文字列形式でなけれ ばならない)
 
 ###### <a name="2.4.1.s2"></a>Requirements
 
-* <a name="2.4.1.s2.b1"></a>Statement ids MUST be generated by the LRS if a Statement is received without an id.
-* <a name="2.4.1.s2.b2"></a>Statement ids SHOULD be generated by the Learning Record Provider.
+* <a name="2.4.1.s2.b1"></a>ステートメントIDは、ステートメントがIDなしで受信された場合、LRSによって生成されなければならない(MUST)。
+* <a name="2.4.1.s2.b2"></a>ステートメントIDは学習記録プロバイダによって生成されるべきである(SHOULD)。
 
 <a name="actor"></a>
 
 #### <a name="2.4.2">2.4.2</a> Actor  
 
 ###### <a name="2.4.2.s1"></a>Description
-The Actor defines who performed the action. The Actor of a Statement can be an Agent or a Group. 
+アクターは、誰がアクションを実行したかを定義します。ステートメントのアクタは、AgentまたはGroupにすることができます。
 
 <a name="agent"></a>
 
@@ -413,21 +349,20 @@ An Agent (an individual) is a persona or system.
 
 ###### <a name="2.4.2.1.s2"></a>Details
 
-* <a name="2.4.2.1.s2.b1"></a>An Agent MUST be identified by one (1) of the four types of Inverse Functional Identifiers (see
- [2.4.2.3 Inverse Functional Identifier](#inversefunctional));
-* <a name="2.4.2.1.s2.b2"></a>An Agent MUST NOT include more than one (1) Inverse Functional Identifier;
-* <a name="2.4.2.1.s2.b3"></a>An Agent SHOULD NOT use Inverse Functional Identifiers that are also used as a Group identifier.
+* <a name="2.4.2.1.s2.b1"></a>エージェントは、4 種類の逆機能識別子 ([2.4.2.3 Inverse Functional Identifier](#inversefunctional)参照) のうち 1 つで識別されなければならない (MUST)。
+* <a name="2.4.2.1.s2.b2"></a>エージェントは1つ以上の逆機能識別子(Inverse Functional Identifier)を含んではならない(MUST NOT)。
+* <a name="2.4.2.1.s2.b3"></a>エージェントは、グループ識別子としても使用される逆機能識別子(Inverse Functional Identifier)を使用すべきで はない(SHOULD NOT)。
 
-The table below lists the properties of Agent Objects.
+以下の表は、エージェントオブジェクトのプロパティの一覧です。
 
 <table border ="1">
 	<tr><th>Property</th><th>Type</th><th>Description</th><th>Required</th></tr>
-	<tr id="2.4.2.1.s2.table1.row1"><td>objectType</td><td>string</td><td><code>Agent</code>. This property is optional except when the Agent is used as a Statement's object.</td>
+	<tr id="2.4.2.1.s2.table1.row1"><td>objectType</td><td>string</td><td><code>Agent</code>. このプロパティは、エージェントがステートメントのオブジェクトとして使用される場合を除き、任意である。</td>
 	<td>Optional</td></tr>
-	<tr id="2.4.2.1.s2.table1.row2"><td>name</td><td>String</td><td>Full name of the Agent.</td>
+	<tr id="2.4.2.1.s2.table1.row2"><td>name</td><td>String</td><td>エージェントのフルネーム。</td>
 	<td>Optional</td></tr>
 	<tr id="2.4.2.1.s2.table1.row3"><td colspan="2">see <a href="#inversefunctional"> 2.4.2.3 Inverse Functional Identifier</a></td>
-	    <td>An Inverse Functional Identifier unique to the Agent.</td>
+	    <td>エージェントに一意の逆機能識別子(Inverse Functional Identifier)。</td>
 	    <td>Required</td></tr>
 </table>
 
@@ -437,92 +372,81 @@ The table below lists the properties of Agent Objects.
 ##### <a name="2.4.2.2">2.4.2.2</a> When the Actor ObjectType is Group
 ###### <a name="2.4.2.2.s1"></a>Description
 
-A Group represents a collection of Agents and can be used in most of the same situations an Agent 
-can be used.  There are two types of Groups: Anonymous Groups and Identified Groups.
+グループはエージェントの集合体であり、エージェントと同じような状況で使用することができます。グループには2つのタイプがあります。匿名グループと識別されたグループです。
 
 ###### <a name="2.4.2.2.s2"></a>Details
 
-An Anonymous Group is used to describe a cluster of people where there is no ready identifier for 
-this cluster, e.g. an ad hoc team.
+匿名グループは、アドホックチームなど、このクラスタを識別するものがない人々のクラスタを表現するために使用されます。
 
-The table below lists all properties of an Anonymous Group.
+下の表は、匿名グループのすべてのプロパティを示しています。
 
 <table border ="1">
 	<tr><th>Property</th><th>Type</th><th>Description</th><th>Required</th></tr>
 	<tr id="2.4.2.2.s2.table1.row1"><td>objectType</td><td>String</td><td><code>Group</code>. </td><td>Required</td></tr>
 	<tr id="2.4.2.2.s2.table1.row2"><td>name</td><td>String</td><td>Name of the Group.</td><td>Optional</td></tr>
 	<tr id="2.4.2.2.s2.table1.row3"><td>member</td><td>Array of <a href="#agent">Agent Objects</a></td>
-	<td>The members of this Group. This is an unordered list.</td>
+	<td>このグループのメンバー。これは順不同のリストです。</td>
 	<td>Required</td></tr>
 </table>
 
-An Identified Group is used to uniquely identify a cluster of Agents.
+識別されたグループは、エージェントのクラスタを一意に識別するために使用されます。
 
-The table below lists all properties of an Identified Group.
+以下の表は、識別されたグループのすべてのプロパティをリストアップしています。
 
 <table border ="1">
 	<tr><th>Property</th><th>Type</th><th>Description</th><th>Required</th></tr>
 	<tr id="2.4.2.2.s2.table2.row1"><td>objectType</td><td>String</td><td><code>Group</code>. </td><td>Required</td></tr>
 	<tr id="2.4.2.2.s2.table2.row2"><td>name</td><td>String</td><td>Name of the Group.</td><td>Optional</td></tr>
 	<tr id="2.4.2.2.s2.table2.row3"><td>member</td><td>Array of <a href="#agent">Agent Objects</a></td>
-	<td>The members of this Group. This is an unordered list.</td>
+	<td>このグループのメンバー。これは順不同のリストです。</td>
 	<td>Optional</td></tr>
 	<tr id="2.4.2.2.s2.table2.row4"><td colspan="2">see <a href="#inversefunctional"> 2.4.2.3 Inverse Functional Identifier</a></td>
-	    <td>An Inverse Functional Identifier unique to the Group.</td><td>Required</td></tr>	
+	    <td>Groupに一意の逆機能識別子(Inverse Functional Identifier)。</td><td>Required</td></tr>	
 </table>
 
 ###### <a name="2.4.2.2.s3"></a>Requirements
 
-* <a name="2.4.2.2.s3.b1"></a>A Learning Record Consumer MUST consider each Anonymous Group distinct even if it has an 
-identical set of members.
-* <a name="2.4.2.2.s3.b2"></a>Learning Record Providers SHOULD use an Identified Group when they wish to issue multiple 
-Statements, aggregate data or store and retrieve documents relating to a group.
-* <a name="2.4.2.2.s3.b3"></a>A Learning Record Provider MAY include a complete or partial list of Agents in the "member" 
-property of a given Anonymous or Identified Group.
-* <a name="2.4.2.2.s3.b4"></a>An LRS returning a Statement MAY return the list of Group members in any order.
+* <a name="2.4.2.2.s3.b1"></a>Learning Record Consumerは、たとえ同一のメンバーの集合であっても、各Anonymous Groupを別個のものとみなさなければならない[MUST]。
+* <a name="2.4.2.2.s3.b2"></a>ラーニングレコードプロバイダは、複数のステートメントの発行、データの集約、グループに関連するドキュメントの保存と取得を希望する場合、Identified Groupを使用するべきである(SHOULD)。
+* <a name="2.4.2.2.s3.b3"></a>Learning Record Providerは、匿名またはIdentified Groupの "member "プロパティに、エージェントの完全または部分的なリストを含めてもよい（MAY）。
+* <a name="2.4.2.2.s3.b4"></a>ステートメントを返すLRSは、グループメンバーのリストを任意の順序で返してもよい（MAY）。
 
 ###### <a name="2.4.2.2.s4"></a>Requirements for Anonymous Groups
 
-* <a name="2.4.2.2.s4.b1"></a>An Anonymous Group MUST include a "member" property listing constituent Agents.
-* <a name="2.4.2.2.s4.b2"></a>An Anonymous Group MUST NOT contain Group Objects in the "member" identifiers.
+* <a name="2.4.2.2.s4.b1"></a>匿名グループは、構成するAgentをリストアップする "member "プロパティを含まなければならない(MUST)。
+* <a name="2.4.2.2.s4.b2"></a>匿名グループは、"member "識別子にグループオブジェクトを含んではならない(MUST NOT)。
 
 ###### <a name="2.4.2.2.s5"></a>Requirements for Identified Groups
 
-* <a name="2.4.2.2.s5.b1"></a>An Identified Group MUST include exactly one (1) Inverse Functional Identifier.
-* <a name="2.4.2.2.s5.b2"></a>An Identified Group MUST NOT contain Group Objects in the "member" property.
-* <a name="2.4.2.2.s5.b3"></a>An Identified Group SHOULD NOT use Inverse Functional Identifiers that are also used 
-as Agent identifiers.
-* <a name="2.4.2.2.s5.b4"></a>An Identified Group MAY include a "member" property listing constituent Agents.
+* <a name="2.4.2.2.s5.b1"></a>Identified Groupは、正確に1つの逆機能識別子を含まなければならない(MUST)。
+* <a name="2.4.2.2.s5.b2"></a>Identified Groupは、「member」プロパティにグループオブジェクトを含んでは ならない[MUST NOT]。
+* <a name="2.4.2.2.s5.b3"></a>Identified Groupは、エージェント識別子としても使用されるInverse Functional Identifiersを使用すべきではない[SHOULD NOT]。
+* <a name="2.4.2.2.s5.b4"></a>Identified Groupは、構成するエージェントをリストしたmemberプロパティを含んでもよい。
 
 <a name="inversefunctional">
 
 ##### <a name="2.4.2.3">2.4.2.3</a> Inverse Functional Identifier
 ###### <a name="2.4.2.3.s1"></a>Description
-An Inverse Functional Identifier (IFI) is a value of an Agent or Identified
-Group that is guaranteed to only ever refer to that Agent or Identified Group.
+逆機能識別子（IFI）は、エージェントまたは識別されたグループの値であり、そのエージェントまたは識別されたグループのみを参照することが保証されています。
 
 ###### <a name="2.4.2.3.s2"></a>Rationale
-Agents and Groups need to be uniquely identifiable in order for data to be stored and retrieved against them. 
-In an xAPI Statement this is accomplished using Inverse Functional Identifiers which are loosely inspired 
-by the widely accepted FOAF principle (see: [Friend Of A Friend](http://xmlns.com/foaf/spec/#term_Agent)).
+エージェントとグループは、データを保存し、それに対して検索するために、一意に識別可能である必要があります。xAPIステートメントでは、広く受け入れられているFOAFの原則（[Friend Of A Friend](http://xmlns.com/foaf/spec/#term_Agent)）に緩く影響を受けたInverse Functional Identifiersを使用してこれを実現している。
 
 ###### <a name="2.4.2.3.s3"></a>Details
 
-The table below lists all possible Inverse Functional Identifier properties.
+以下の表は、可能なすべてのIFIの特性をリストアップしたものである。
 
 <table border ="1">
 	<tr><th>Property</th><th>Type</th><th>Description</th></tr>
-	<tr id="2.4.2.3.s3.table1.row1"><td><a href="http://xmlns.com/foaf/spec/#term_mbox">mbox</a></td><td>mailto IRI</td><td>The required format is "mailto:email address". <br>
-	Only email addresses that have only ever been and will ever be assigned to this Agent, 
-but no others, SHOULD be used for this property and mbox_sha1sum.</td></tr>
-	<tr id="2.4.2.3.s3.table1.row2"><td><a href="http://xmlns.com/foaf/spec/#term_mbox_sha1sum">mbox_sha1sum</a></td><td>String</td><td>The hex-encoded SHA1 hash of a mailto IRI (i.e. the value of an mbox property). An LRS MAY include Agents with a matching hash when a request is based on an mbox.</td></tr>
-	<tr id="2.4.2.3.s3.table1.row3"><td>openid</td><td>URI</td><td>An openID that uniquely identifies the Agent.</td></tr>
-	<tr id="2.4.2.3.s3.table1.row4"><td>account</td><td><a href="#agentaccount">Object</a></td><td>A user account on an existing system e.g. an LMS or intranet.</td></tr>	
+	<tr id="2.4.2.3.s3.table1.row1"><td><a href="http://xmlns.com/foaf/spec/#term_mbox">mbox</a></td><td>mailto IRI</td><td>必須フォーマットは "mailto:email address "である。<br>
+このプロパティとmbox_sha1sumには、このエージェントにのみ割り当てられ、他の人には割り当てられないメールアドレスのみを使用する必要があります(SHOULD)。</td></tr>
+	<tr id="2.4.2.3.s3.table1.row2"><td><a href="http://xmlns.com/foaf/spec/#term_mbox_sha1sum">mbox_sha1sum</a></td><td>String</td><td>mailto IRI(つまりmboxプロパティの値)を16進法でSHA1ハッシュ化したもの。LRSは、リクエストがmboxに基づいている場合、一致するハッシュを持つ エージェントを含めてもよい(MAY)。</td></tr>
+	<tr id="2.4.2.3.s3.table1.row3"><td>openid</td><td>URI</td><td>エージェントを一意に識別するopenID。</td></tr>
+	<tr id="2.4.2.3.s3.table1.row4"><td>account</td><td><a href="#agentaccount">Object</a></td><td>LMSやイントラネットなど、既存のシステム上のユーザーアカウント。</td></tr>	
 </table>
 
 ###### <a name="2.4.2.3.s4"></a>Client Requirements
-* <a name="2.4.2.3.s4.b1"></a>The domain portions of email addresses are case insensitive. Clients SHOULD use lowercase 
-for the domain portion of the email address when calculating the SHA1 hash for the "mbox_sha1sum" property. 
+* <a name="2.4.2.3.s4.b1"></a>電子メールアドレスのドメイン部分は、大文字と小文字を区別しない。クライアントは、「mbox_sha1sum」プロパティのSHA1ハッシュを計算するとき、電子メールアドレスのドメイン部分に小文字を使用すべきです(SHOULD)。
 
 <a name="agentaccount"></a>
 
@@ -530,18 +454,14 @@ for the domain portion of the email address when calculating the SHA1 hash for t
 
 ###### <a name="2.4.2.4.s1"></a>Description
 
-A user account on an existing system, such as a private system (LMS or intranet) or a public
-system (social networking site).
+プライベートシステム（LMS やイントラネット）またはパブリックシステム（ソーシャルネットワーキングサイト）など、既存のシステム上のユーザアカウントです。
 
 ###### <a name="2.4.2.4.s2"></a>Details
 
-* <a name="2.4.2.4.s2.b1"></a>If the system that provides the account Object uses OpenID, the Learning Record Provider
-SHOULD use the openid property instead of an account Object.
-* <a name="2.4.2.4.s2.b2"></a>If the Learning Record Provider is concerned about revealing personally identifiable
-information about an Agent or Group, it SHOULD use an opaque account name (for example an
-account number) to identify all Statements about a person while maintaining anonymity.
+* <a name="2.4.2.4.s2.b1"></a>アカウントオブジェクトを提供するシステムがOpenIDを使用している場合、Learning Record Providerはアカウントオブジェクトの代わりにopenidプロパティを使用する必要があります(SHOULD)。
+* <a name="2.4.2.4.s2.b2"></a>学習記録プロバイダがエージェントまたはグループに関する個人を特定できる情報を明らかにすることを懸念する場合、匿名性を維持しながら個人に関するすべてのステートを特定するために不透明なアカウント名（例えば、アカウント番号）を使用すべきです（SHOULD）。
 
-The table below lists all properties of Account Objects.
+以下の表は、Account Objects の全プロパティを示している。
 
 <table border ="1">
 	<tr><th>Property</th><th>Type</th><th>Description</th><th>Required</th></tr>
