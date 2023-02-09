@@ -465,9 +465,9 @@ An Agent (an individual) is a persona or system.
 
 <table border ="1">
 	<tr><th>Property</th><th>Type</th><th>Description</th><th>Required</th></tr>
-	<tr id="2.4.2.4.s2.table1.row1"><td>homePage</td><td>IRL</td><td>The canonical home page for the system the account is on. This is based on FOAF's accountServiceHomePage.</td>
+	<tr id="2.4.2.4.s2.table1.row1"><td>homePage</td><td>IRL</td><td>アカウントが所属するシステムの標準的なホームページ。これは、FOAF の accountServiceHomePage に基づいています。</td>
 	<td>Required</td></tr>
-	<tr id="2.4.2.4.s2.table1.row2"><td>name</td><td>String</td><td>The unique id or name used to log in to this account. This is based on FOAF's accountName.</td><td>Required</td></tr>
+	<tr id="2.4.2.4.s2.table1.row2"><td>name</td><td>String</td><td>このアカウントにログインする際に使用する一意の ID あるいは名前。これは、FOAF の accountName に基づいています。</td><td>Required</td></tr>
 </table>
 
 
@@ -491,87 +491,66 @@ This example shows an Agent identified by an opaque account:
 
 ###### <a name="2.4.3.s1"></a>Description
 
-The Verb defines the action between an Actor and an Activity. 
+Verbは、ActorとActivityの間の作用を定義する。
 
 ###### <a name="2.4.3.s2"></a>Rationale
 
-The Verb in an xAPI Statement describes the action performed during the learning experience. The 
-xAPI does not specify any particular Verbs. (With one exception, namely the reserved 
-Verb [http://adlnet.gov/expapi/verbs/voided](#voided)). Instead, it defines how to create Verbs so that 
-communities of practice can establish Verbs meaningful to their members and make them available 
-for use by anyone. A predefined list of Verbs would be limited by definition and might not be able to 
-effectively capture all possible future learning experiences. 
+xAPIステートメントのVerbは、学習体験中に実行されるアクションを記述する。xAPI は特定の Verb を指定しない（例外として、予約済みの Verb[http://adlnet.gov/expapi/verbs/voided](#voided) がある）。その代わり、実践コミュニティがメンバーにとって意味のあるVerbを確立し、誰でも使えるようにするために、Verbの作成方法を定義しています。あらかじめ定義されたVerbのリストは、定義によって制限され、将来起こりうるすべての学習経験を効果的に捉えることができない可能性があります。
+
 
 ###### <a name="2.4.3.s3"></a>Details
 
-Verbs appear in Statements as Objects consisting of an IRI and a set of display names 
-corresponding to multiple languages or dialects which provide human-readable meanings of the Verb. 
-The table below lists all properties of the Verb Object.
+Verbは、IRIと、人間が読める意味を提供する複数の言語または方言に対応する表示名のセットからなるオブジェクトとしてStatementsに表示される。以下の表は、Verbオブジェクトのすべてのプロパティを示しています。
 
 <table>
 	<tr><th>Property</th><th>Type</th><th>Description</th><th>Required</th></tr>
 	<tr id="2.4.3.s3.table1.row1">
 		<td>id</td>
 		<td>IRI</td>
-		<td>Corresponds to a Verb definition. Each Verb definition 
-			corresponds to the meaning of a Verb, not the word. 
+		<td>Verbの定義に対応します。各Verbの定義は、単語ではなく、Verbの意味に対応しています。
 		</td>
 		<td>Required</td>
 	</tr>
 	<tr id="2.4.3.s3.table1.row2">
 		<td>display</td>
 		<td><a href="#lang-map">Language Map</a></td>
-		<td>The human readable representation of the 
-			Verb in one or more languages. This does not have any impact on the 
-			meaning of the Statement, but serves to give a human-readable 
-			display of the meaning already determined by the chosen Verb.</td>
+		<td>1 つまたは複数の言語による Verb の人間にとって読みやすい表現。これはステートメントの意味には影響しないが、選択されたVerbによってすでに決定された意味を、人間が読めるように表示する役割を果たす。</td>
 		<td>Recommended</td>
 	</tr>
 </table>
 
 ###### <a name="2.4.3.s4"></a>Verb Id Requirements
 
-* <a name="2.4.3.s4.b1"></a>A system reading a Statement MUST use the Verb IRI to infer meaning.
-* <a name="2.4.3.s4.b2"></a>The IRI contained in an id SHOULD contain a human-readable portion which SHOULD provide meaning enough 
-for a person reviewing the raw statement to disambiguate the Verb from other similar (in syntax) Verbs.
-* <a name="2.4.3.s4.b3"></a>A single Verb IRI MUST NOT be used to refer to multiple meanings.
+* <a name="2.4.3.s4.b1"></a>ステートメントを読むシステムは、意味を推論するためにVerbのIRIを使用しなければならない (MUST)。
+* <a name="2.4.3.s4.b2"></a>IDに含まれるIRIは、人間が読める部分を含むべきであり、生のステートメントをレビューする人が、（構文が）類似した他のVerbからそのVerbを曖昧さをなくすのに十分な意味を提供するべきである（SHOULD)。
+* <a name="2.4.3.s4.b3"></a>一つのVerb IRIが複数の意味を示すために使われてはならない(MUST NOT)。
 
 ###### <a name="2.4.3.s5"></a>Verb Display Learning Record Provider Requirements
 
-* <a name="2.4.3.s5.b1"></a>The "display" property SHOULD be used by all Statements.
-* <a name="2.4.3.s5.b2"></a>The "display" property MUST be used to illustrate the meaning which is already determined 
-by the Verb IRI.
+* <a name="2.4.3.s5.b1"></a>display "プロパティは、すべてのステートメントで使用されるべきである（SHOULD）。
+* <a name="2.4.3.s5.b2"></a>display "プロパティは、Verb IRI によって既に決定されている意味を説明するために使用されなければならない（MUST）。
 
 ###### <a name="2.4.3.s6"></a>Verb Display LRS Requirements
 
-The requirements below relate to the "display" property as returned by the LRS via the API.  
+以下の要件は、APIを介してLRSから返される "display "プロパティに関するものである。
 
-* <a name="2.4.3.s6.b1"></a>When queried for Statements with a Format of `exact`, the LRS MUST return the "display" property 
-exactly as included (or omitted) within the Statement.
-* <a name="2.4.3.s6.b2"></a>When queried for Statements with a Format of `ids`, the LRS SHOULD* NOT include the "display" property.
-* <a name="2.4.3.s6.b3"></a>When queried for Statements with a Format of `canonical`, the LRS SHOULD* return a 
-canonical Display for that Verb. 
-* <a name="2.4.3.s6.b4"></a>The LRS may determine its canonical Display based on the Verb's "display" property included within 
-Statements it receives, the "name" property included in the metadata as described in 
-[3.2 Hosted Metadata](#miscmeta), or the Verb's Display as defined in some other location.
+* <a name="2.4.3.s6.b1"></a>ステートメントの形式が`exact`である場合、LRS はそのステートメントに含まれる（または省略される） "display" プロパティを正確に返さなければならない（MUST）。
+* <a name="2.4.3.s6.b2"></a>ステートメントのフォーマットがidsの場合、LRSは "display "プロパティを含むべきではない(SHOULD* NOT)。
+* <a name="2.4.3.s6.b3"></a>ステートメントのフォーマットが canonical の場合、LRS はその動詞の標準的なディスプレイを返すべきである(SHOULD*) 
+* <a name="2.4.3.s6.b4"></a>LRSは受信したステートメントに含まれるVerbの "display "プロパティ、[3.2 Hosted Metadata](#miscmeta)に記載されるメタデータに含まれる "name "プロパティ、または他の場所で定義されるVerbの表示に基づいて正規の表示を決定することができる。
 
 ###### <a name="2.4.3.s7"></a>Verb Display Learning Record Consumer Requirements
 
-The requirements below relate to the display property as displayed to a user by a Learning Record Consumer. 
+以下の要件は、Learning Record Consumer がユーザに表示する display プロパティに関するものである。
 
-* <a name="2.4.3.s7.b1"></a>The "display" property MUST NOT be used to alter the meaning of a Verb.
-* <a name="2.4.3.s7.b2"></a>A Learning Record Consumer MUST NOT use the "display" property to infer any meaning from the Statement.
-* <a name="2.4.3.s7.b3"></a>A Learning Record Consumer MUST NOT use the "display" property for any purpose other than 
-to display to a human. Using the "display" property for aggregation or categorization of Statements is an example of 
-violating this requirement. 
-* <a name="2.4.3.s7.b4"></a>A Learning Record Consumer displaying a Statement's Verb in a user interface MAY choose to render 
-the Verb's "display" property included within the Statement, the "name" property included in the metadata as described in 
-[3.2 Hosted Metadata](#miscmeta), or the Verb's Display as defined in some other location.
-* <a name="2.4.3.s7.b5"></a>Learning Record Consumers displaying a Statement's Verb MUST NOT display a word that differs 
-from the meaning of the Verb but MAY alter the wording and tense displayed for the purposes of human-readability. 
+* <a name="2.4.3.s7.b1"></a>"display"プロパティはVerbの意味を変更するために使用してはならない（MUST NOT）。
+* <a name="2.4.3.s7.b2"></a>LRCは、ステートメントから意味を推測するために "display "プロパティを使用してはならない（MUST NOT）。
+* <a name="2.4.3.s7.b3"></a>LRCは、は、人間に表示する以外の目的で "display "プロパティを使用してはならない（MUST NOT）。ステートメントの集約または分類のために "display "プロパティを使用することは、この要件に違反する一例である。
+* <a name="2.4.3.s7.b4"></a>ステートメントのVerbをユーザインターフェースに表示するLearning Record Consumerは、ステートメントに含まれるVerbの "display "プロパティ、[3.2 Hosted Metadata](#miscmeta)に記載されるメタデータに含まれる "name "プロパティ、または他の場所に定義されるVerbのDisplayを表示することを選択してもよい（MAY）。
+* <a name="2.4.3.s7.b5"></a>ステートメントのVerbを表示する学習記録コンシューマは、Verbの意味と異なる単語を表示してはならないが、人間が読みやすいように表示される文言と時制を変更してもよい。
 
 ###### <a name="2.4.3.s8"></a>Example
-This example shows a Verb with the recommended properties set and using US English and Spanish languages. 
+この例では、推奨プロパティを設定したVerbで、US EnglishとSpanishの言語を使用しています。
 ```
 {
     "id":"http://example.com/xapi/verbs#defenestrated", 
@@ -582,32 +561,25 @@ This example shows a Verb with the recommended properties set and using US Engli
 }
 ``` 
 
-The Verb in the example above is included for illustrative purposes only. This is not intended to imply that
-a Verb with this meaning has been defined with this id. This applies to all example verbs given in this 
-specification document, with the exception of the reserved Verb [http://adlnet.gov/expapi/verbs/voided](#voided)).
-			
+上記の例の Verb は、説明のためだけに含まれている。これは、この意味を持つ Verb がこの ID で定義されていることを意味するものではない。これは、予約済みVerb [http://adlnet.gov/expapi/verbs/voided](#voided)を除き、本仕様書で示されるすべての例のVerbに適用される。
+
 ##### <a name="2.4.3.1">2.4.3.1</a> Use in Language and Semantics of Verbs
 
 ###### <a name="2.4.3.1.s1"></a>Details
 
 _Semantics_
 
-The IRI represented by the Verb id identifies the particular semantics of a word, not the word itself. 
+Verb idで表されるIRIは、単語そのものではなく、その単語の特定のセマンティクスを識別する。
 
-For example, the English word "fired" could mean different things depending on context, such as 
-"fired(a weapon)", "fired(a kiln)", or "fired(an employee)". In this case, an IRI identifies one of 
-these specific meanings. 
+たとえば、英語の "fired "という単語は、文脈によって、"fired (a weapon)", "fired (a kiln)", "fired (an employee)" などのさまざまな意味を持つことがあります。この場合、IRIは、これらの特定の意味の1つを識別する。
 
-The "display" property has some flexibility in tense. While the human-readable portion of the Verb id will 
-usually use the past tense, if conjugating verbs to another tense within the "display" property makes the most
-sense for the Statement as a whole, it is allowed.
+”display "プロパティは、時制に多少の柔軟性がある。Verb idの人間が読める部分は通常過去形を使用するが、"display "プロパティ内で動詞を他の時制に活用することがステートメント全体として最も理にかなっている場合、それが許可される。
 
 _Language_
 
-A Verb in the Experience API is an IRI, and denotes a specific meaning not tied to any particular language. 
+Experience APIにおけるVerbはIRIであり、特定の言語に縛られることなく、特定の意味を示す。
 
-For example, a particular Verb IRI such as http://example.org/firearms#fire might denote the action of firing a gun, 
-or the Verb IRI http://example.com/فعل/خواندن might denote the action of reading a book. 
+たとえば、http://example.org/firearms#fire のような特定のVerb IRIは、銃を撃つ動作を表すかもしれませんし、http://example.com/فعل/خواندن のようなVerb IRIは、本を読む動作を表すかもしれません。
 
 <a name="object"></a>
 
