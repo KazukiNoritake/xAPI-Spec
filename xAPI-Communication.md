@@ -104,50 +104,36 @@
 <a name="partthree"></a>
 # Part Three: Data Processing, Validation, and Security 
 
-This third part details the more technical side of the Experience API, dealing with how Statements are transferred between 
-Learning Record Provider and LRS. A number of libraries are available for a range of technologies (including JavaScript) 
-which handle this part of the specification. It therefore might not be necessary for Learning Record Providers to fully 
-understand every detail of this part of the specification.
+この第三部では、Experience APIのより技術的な側面について、Learning Record ProviderとLRSの間でStatementsがどのように転送されるかを扱います。JavaScriptを含む様々な技術で、仕様のこの部分を処理する多くのライブラリが利用可能です。したがって、学習記録プロバイダは、仕様のこの部分の詳細を完全に理解する必要はないかもしれません。
 
 <a name="requests"></a>
 
 ## <a name="1.0">1.0</a> Requests
 
-xAPI tracking is done via HTTP Requests from the Learning Record Provider (client) to the LRS (server). This 
-specification offers guidance in some aspects of this communication.  Where no guidance is offered, it is 
-recommended that those implementing xAPI use current industry best practices.
+xAPI のトラッキングは、Learning Record Provider（クライアント）から LRS（サーバー）への HTTP リクエストで行われます。本仕様はこの通信のいくつかの側面においてガイダンスを提供する。ガイダンスがない場合、xAPI を実装する者は、現在の業界のベストプラクティスを使用することが推奨される。
 
 <a name="httphead"></a>
 
 ### <a name="1.1">1.1</a> HEAD Request Implementation
 
 ###### <a name="1.1.s1"></a>Description
-The behavior of the LRS in response to PUT, POST, GET and DELETE requests is outlined in [Resources](#resources) below. 
-All resources that support GET requests also support HEAD.
-The LRS will respond to HEAD requests by returning the meta information only, using the HTTP headers, and 
-not the actual document.  
+PUT、POST、GET、DELETE リクエストに対する LRS の動作は、以下の[Resources](#resources)に概説されている。GET リクエストをサポートする全てのリソースは HEAD もサポートする。LRS は HEAD リクエストに対し、実際のドキュメントではなく、HTTP ヘッダを使用したメタ情報のみを返します。
 
 ###### <a name="1.1.s2"></a>Rationale
 
-Clients accessing the LRS might need to check if a particular Statement exists, or determine
-the modification date of documents such as those in State, Activity Profile, or Agent Profile Resources. Particularly
-for large documents, it is more efficient not to retrieve the entire document just to check its modification date.
+LRS にアクセスするクライアントは、特定のステートメントが存在するかどうかを確認したり、ステートメント、アクティビティプロファイル、エージェントプロファイルリソースなどのドキュメントの更新日を確認する必要があるかもしれません。特に大きなドキュメントの場合、その更新日を確認するためだけにドキュメント全体を取得することは効率的でない。
 
 ###### <a name="1.1.s3"></a>LRS Requirements
-* <a name="1.1.s3.b1"></a>The LRS MUST respond to any HTTP HEAD request as it would have responded to an otherwise
-identical HTTP GET request except:
-    * <a name="1.1.s3.b1.b1"></a>The message-body MUST be omitted.
-    * <a name="1.1.s3.b1.b2"></a>The Content-Length header MAY be omitted, in order to avoid wasting LRS resources.
+* <a name="1.1.s3.b1"></a>LRS は HTTP HEAD リクエストに対して、他の同一の HTTP GET リクエストと同様に応答しなければならない (MUST)。
+    * <a name="1.1.s3.b1.b1"></a>message-body は省略されなければならない(MUST)。
+    * <a name="1.1.s3.b1.b2"></a>LRSのリソースの浪費を避けるため、Content-Lengthヘッダは省略してもよい(MAY)。
 
 <a name="headers"></a> 
 
 ### <a name="1.2">1.2</a> Headers
 
 ##### <a name="1.2.s1"></a>Header Parameters
-Some header parameters used within xAPI data transfer are 
-[standard HTTP headers](http://en.wikipedia.org/wiki/List_of_HTTP_header_fields). Others are specific to this
- specification. The following request headers are expected to be used by the Learning Record Providers in some or all 
- of the types of request and situations described in this specification:
+xAPIデータ転送で使用されるいくつかのヘッダーパラメータは、[標準的なHTTPヘッダー](http://en.wikipedia.org/wiki/List_of_HTTP_header_fields)です。その他はこの仕様に特有のものである。以下のリクエストヘッダは、学習記録プロバイダがこの仕様で説明するリクエストの種類と状況の一部またはすべてで使用されることが期待されます。
 
 * <a name="1.2.s1.b1"></a>Accept
 * <a name="1.2.s1.b2"></a>Accept-Encoding
@@ -160,8 +146,7 @@ Some header parameters used within xAPI data transfer are
 * <a name="1.2.s1.b9"></a>If-None-Match
 * <a name="1.2.s1.b10"></a>X-Experience-API-Version 
 
-The following response headers are expected to be used by the LRS. Again, not all of these apply
-to every type of request and/or situations:
+以下のレスポンスヘッダがLRSによって使用されることが期待される。繰り返しますが、これら全てが全てのタイプのリクエストや状況に適用されるわけではありません。
 
 * <a name="1.2.s1.b11"></a>Content-Type
 * <a name="1.2.s1.b12"></a>Content-Length
@@ -171,7 +156,7 @@ to every type of request and/or situations:
 * <a name="1.2.s1.b16"></a>X-Experience-API-Version
 * <a name="1.2.s1.b17"></a>X-Experience-API-Consistent-Through
 
-The lists above are not intended to be exhaustive. See requirements throughout this document for more details.
+上記のリストは、すべてを網羅することを意図したものではありません。詳細については、この文書全体の要件を参照してください。
 
 <a name="alt-request-syntax"></a>
 
@@ -180,66 +165,48 @@ The lists above are not intended to be exhaustive. See requirements throughout t
 
 ###### <a name="1.3.s1"></a>Description
 
-One of the goals of the xAPI is to allow cross-domain tracking, and even though xAPI seeks to enable tracking from 
-applications other than browsers, browsers still need to be supported. For example, Internet Explorer 8 and 9 do not 
-implement Cross Origin Resource Sharing, but rather use their own Cross Domain Request API, which cannot use all of 
-the xAPI as described above due to only supporting "GET" and "POST", and not allowing HTTP headers to be set.  
+xAPI の目的の一つはクロスドメイントラッキングを可能にすることであり、xAPI がブラウザ以外のアプリケーションからのトラッキングを可能にしようとしていても、ブラウザはまだサポートされる必要があります。例えば、Internet Explorer 8と9はCross Origin Resource Sharingを実装しておらず、独自のCross Domain Request APIを使用していますが、"GET" と "POST" のみサポートし、HTTPヘッダの設定を許可しないため、上記のようにxAPIの全てを使用することはできません。
 
 ###### <a name="1.3.s2"></a>Details/Requirements
 
-The following describes alternate syntax to use only when unable to use the usual syntax for specific calls due to the 
-restrictions mentioned above. This alternate syntax can also be used to GET Statements due to limits on query string length.  
+上記の制約により、特定の呼び出しに対して通常の構文が使用できない場合にのみ使用する代替構文について説明します。この代替構文は、クエリ文字列の長さに制限があるため、ステートメントをGETする場合にも使用することができる。
 
 See [Appendix C: Cross Domain Request Example](#Appendix3C) for an example. 
 
 ###### <a name="1.3.s3"></a>Requirements
 
 __Method__:  
-* <a name="1.3.s3.b1"></a>All xAPI requests issued MUST be POST. 
-* <a name="1.3.s3.b2"></a>The intended xAPI method MUST be included as the value of the "method" query 
-string parameter. 
-* <a name="1.3.s3.b3"></a>The Learning Record Provider MUST NOT include any other query string parameters on the request.
+* <a name="1.3.s3.b1"></a>発行されるすべてのxAPIリクエストはPOSTでなければならない(MUST)。
+* <a name="1.3.s3.b2"></a>意図するxAPIメソッドは、クエリ文字列パラメータ "method "の値として含まれなければならない（MUST）。
+* <a name="1.3.s3.b3"></a>LRPは、リクエストに他のいかなるクエリ文字列パラメータも含めてはならない（MUST NOT）。
 
 Example: http://example.com/xAPI/statements?method=PUT  
 
 __Content__:  
-* <a name="1.3.s3.b4"></a>If the xAPI call involved sending content, the Learning Record Provider MUST URL encode that content and 
-include it as a form parameter called "content". 
-* <a name="1.3.s3.b5"></a>The LRS MUST interpret this content as a UTF-8 string. Storing binary data is not supported with this syntax.  
+* <a name="1.3.s3.b4"></a>xAPIコールがコンテンツの送信を含む場合、LRPダはそのコンテンツをURLエンコードし、「content」というフォームパラメータとして含まなければならない(MUST)。 
+* <a name="1.3.s3.b5"></a>LRSはこのコンテンツをUTF-8文字列として解釈しなければならない(MUST)。この構文ではバイナリデータの保存はサポートされていない。 
 
 __Headers__:  
-* <a name="1.3.s3.b6"></a>The Learning Record Provider MAY include any header parameters required by this specification which are 
-expected to appear in the HTTP header as form parameters with the same names. This applies 
-to the following parameters: Authorization, X-Experience-API-Version, Content-Type, Content-Length,
-If-Match and If-None-Match. It does not apply to Content-Transfer-Encoding.
-* <a name="1.3.s3.b7"></a>The LRS MUST treat the form parameters listed above as header parameters. 
-* <a name="1.3.s3.b8"></a>The Learning Record Provider MUST include other header parameters not listed above in the HTTP header as normal. 
-* <a name="1.3.s3.b9"></a>The Learning Record Provider SHOULD* still include a Content-Type header (in the HTTP header) for this type of 
+* <a name="1.3.s3.b6"></a>LRPは、HTTPヘッダーに現れることが期待される本仕様で要求されるヘッダーパラメータを、同じ名前を持つフォームパラメータとして含めてもよい(MAY)。これは、以下のパラメータに適用される。Authorization、X-Experience-API-Version、Content-Type、Content-Length、If-Match、If-None-Match。Content-Transfer-Encodingには適用されない。
+* <a name="1.3.s3.b7"></a>LRS は上に挙げたフォームパラメータをヘッダパラメータとして扱わなければならない(MUST)。
+* <a name="1.3.s3.b8"></a>LRPは上記以外のヘッダーパラメータを通常通りHTTPヘッダーに含めなければならない(MUST)。
+* <a name="1.3.s3.b9"></a>LRPはこのタイプのリクエストに対しても、'application/x-www-form-urlencoded'という値を持つContent-Typeヘッダー(HTTPヘッダー内)を含めるべきである(SHOULD*)。
 request with a value of 'application/x-www-form-urlencoded'. 
-* <a name="1.3.s3.b10"></a>The Content-Type form parameter SHOULD* specify the content type of the content within the content form parameter. 
-* <a name="1.3.s3.b11"></a>The Learning Record Provider SHOULD* still include a Content-Length header (in the HTTP header) for this type of 
-request indicating the overall length of the request's content. 
-* <a name="1.3.s3.b12"></a>The Content-Length form parameter SHOULD* specify the length of the content within the 
-content form parameter and will therefore be a lower figure than the length listed in the Content-Length header. 
+* <a name="1.3.s3.b10"></a>Content-Typeフォームパラメータは、コンテンツフォームパラメータ内でコンテンツのコンテンツタイプを指定するべきである(SHOULD*)。
+* <a name="1.3.s3.b11"></a>LRPは、このタイプのリクエストに対しても、リクエストのコンテンツ全体の長さを示すContent-Lengthヘッダー（HTTPヘッダー内）を含めるべきです（SHOULD*）。
+* <a name="1.3.s3.b12"></a>Content-Lengthフォーム・パラメータは、Contentフォーム・パラメータ内のコンテンツの長さを指定すべきであり、したがってContent-Lengthヘッダーに記載された長さよりも低い数値になる。
 
 __Query string parameters__:  
-* <a name="1.3.s3.b13"></a>Any query string parameters other than "method" MUST instead be included as a form parameter 
-with the same name. 
-* <a name="1.3.s3.b14"></a>The LRS MUST treat any form parameters other than "content" or the header parameters 
-listed above as query string parameters. 
+* <a name="1.3.s3.b13"></a>クエリーストリングパラメーター： "method "以外のすべてのクエリーストリングパラメーターは、代わりに同じ名前のフォームパラメーターとして含まれなければなりません（MUST）。
+* <a name="1.3.s3.b14"></a>LRSは "content "または上記のヘッダーパラメータ以外のフォームパラメータをクエリ文字列パラメータとして扱わなければならない(MUST)。
 
-__Attachments__: Note that due to issues relating to encoding, it is not possible to send 
-binary data attachments using this syntax. See [Attachments](./xAPI-Data.md#attachments) 
+__Attachments__: エンコーディングに関する問題のため，この構文でバイナリデータの添付ファイルを送信することはできないことに注意すること。See [Attachments](./xAPI-Data.md#attachments) 
 
-* <a name="1.3.s3.b15"></a>The LRS MUST support the syntax above.  
+* <a name="1.3.s3.b15"></a>LRS は上記のシンタックスをサポートしなければならない(MUST)。
 
-There might be cases where there is a requirement for the Learning Record Provider to support applications or browsers where the 
-Client code is hosted on a different scheme (HTTP or HTTPS) from the LRS. A proxy is only needed IF you want to support HTTP to 
-HTTPS requests from IE 9 or lower. You can do HTTP to HTTPS (or HTTPS to HTTP!) without a proxy if you use a modern browser. 
-Two simple solutions might be to 1) set up a proxy pass through on the same scheme as the Client code to the LRS or 2) to host an 
-intermediary server-side LRS on the same scheme as the Client code to route Statements to the target LRS.
+クライアントコードがLRSとは異なるスキーム(HTTPまたはHTTPS)でホストされているアプリケーションやブラウザを、学習記録プロバイダがサポートしなければならない場合があるかもしれません。プロキシが必要なのは、IE9以下からのHTTPからHTTPSへのリクエストをサポートしたい場合のみです。最新のブラウザを使えば、プロキシなしで HTTP から HTTPS (または HTTPS から HTTP!) にすることができます。2つの簡単な解決策は、1) LRSへのクライアントコードと同じスキームでプロキシパススルーをセットアップする、2) クライアントコードと同じスキームで中間サーバーサイドLRSをホストしてステートメントをターゲットLRSにルーティングする、かもしれません。
 
-Strongly consider security risks before making the decision to use implementations that use HTTP.
+HTTPを使用する実装を使用する決定をする前に、セキュリティリスクを強く考慮すること。
 
 <a name="encoding"></a> 
 
@@ -250,120 +217,90 @@ Strongly consider security risks before making the decision to use implementatio
 
 <a name="content-types"></a> 
 ### <a name="1.5">1.5</a> Content Types
-Requests and responses within this specification normally use an `application/json` content type. Exceptions to this are:
+この仕様におけるリクエストとレスポンスは、通常 application/json コンテントタイプを使用する。ただし、例外があります。
 
-* <a name="1.5.b1"></a>Documents can have any content type. 
-* <a name="1.5.b2"></a>Statement requests that can sometimes include Attachments use the `multipart/mixed` content type. 
+* <a name="1.5.b1"></a>ドキュメントは任意のコンテントタイプを持つことができる。
+* <a name="1.5.b2"></a>添付ファイルを含むことができるステートメント・リクエストは、multipart/mixedコンテント・タイプを使用する。
 
 <a name="applicationjson"></a> 
 #### <a name="1.5.1">1.5.1</a> Application/JSON
-Requests within this specification normally use an `application/json` content type. 
+この仕様内のリクエストは、通常application/jsonコンテントタイプを使用する。
 
 ###### <a name="1.5.1.s1"></a>LRS Requirements
-* <a name="1.5.1.s1.b1"></a>When receiving a PUT or POST with a document type of `application/json`, an LRS MUST accept batches 
-of Statements which contain no Attachment Objects.
-* <a name="1.5.1.s1.b2"></a>When receiving a PUT or POST with a document type of `application/json`, an LRS MUST accept batches 
-of Statements which contain only Attachment Objects with a populated fileUrl.
+* <a name="1.5.1.s1.b1"></a>Document Type が application/json の PUT または POST を受信する場合、LRS は添付オブジェクトを含まない Statements のバッチを受け入れなければならない(MUST)。
+* <a name="1.5.1.s1.b2"></a>ドキュメントタイプが application/json の PUT または POST を受信する場合、LRS は fileUrl が設定されたアタッチメントオブジェクトのみを含むステートメント のバッチを受け入れなければならない(MUST)。
 
 <a name="multipartmixed"></a> 
 #### <a name="1.5.2">1.5.2</a> Multipart/Mixed
 
-The `multipart/mixed` content type is used for requests that *could* include Attachments. This does not mean that all 
-"multipart/mixed" requests necessarily do include Attachments.
+`multipart/mixed`コンテンツタイプは、Attachmentsを含む可能性があるリクエストに使用される。これは、すべての「multipart/mixed」リクエストが必ずAttachmentsを含むということを意味しない。
 
 ##### <a name="1.5.2.s1"></a>Procedure For The Exchange Of Attachments
 
-* <a name="1.5.2.s1.b1"></a>A Statement request including zero or more Attachments is construed as described below.
+* <a name="1.5.2.s1.b1"></a>0個以上の添付ファイルを含むステートメントリクエストは、以下に記述されるように解釈される。
 
-* <a name="1.5.2.s1.b2"></a>The Statement is sent using a Content-Type of `multipart/mixed`. Any Attachments are placed 
-at the end of such transmissions.
+* <a name="1.5.2.s1.b2"></a>ステートメントは、Content-Type として multipart/mixed を使用して送信される。すべての添付ファイルは、そのような送信の最後に置かれる。
 
-* <a name="1.5.2.s1.b3"></a>The LRS decides whether to accept or reject the Statement based on the information in the first part.
+* <a name="1.5.2.s1.b3"></a>LRS は最初の部分の情報に基づいて、ステートメントを受け入れるか拒否するかを決定する。
 
-* <a name="1.5.2.s1.b4"></a>If it accepts the request, it can match the raw data of an Attachment(s) with the 
-Attachment header by comparing the SHA-2 of the raw data to the SHA-2 declared in the header. It MUST not do so any other way.
+* <a name="1.5.2.s1.b4"></a>要求を受け入れる場合、LRSは生データのSHA-2とヘッダーで宣言されたSHA-2を比較することで、添付ファイルの生データを添付ファイルヘッダにマッチングさせることができる。それ以外の方法でそれを行ってはならない[MUST]。
 
 ###### <a name="1.5.2.s2"></a>Requirements for Attachment Statement Batches
 
-A request transmitting a Statement batch, Statement results, or single Statement that includes Attachments MUST satisfy one of the 
-following criteria:
+Statementバッチ、Statement結果、または添付ファイルを含む単一のStatementを送信するリクエストは、以下の基準のいずれかを満たさなければなりません。
 
-* <a name="1.5.2.s2.b1"></a>It MUST be of type `application/json` and include a fileUrl for every Attachment EXCEPT for Statement 
-results when the "attachments" filter is `false`.
-* <a name="1.5.2.s2.b2"></a>It MUST conform to the definition of "multipart/mixed" in [RFC 2046](https://www.ietf.org/rfc/rfc2046.txt) and:
-    * <a name="1.5.2.s2.b2.b1"></a>The first part of the multipart document MUST contain the Statements themselves, 
-    with type `application/json`.
-    * <a name="1.5.2.s2.b2.b2"></a>Each additional part contains the raw data for an Attachment and forms a logical 
-    part of the Statement. This capability will be available when issuing PUT or POST requests against the Statement Resource.
-    * <a name="1.5.2.s2.b2.b3"></a>MUST include an X-Experience-API-Hash parameter in each part's header after the 
-    first (Statements) part.
-    * <a name="1.5.2.s2.b2.b4"></a>MUST include a Content-Transfer-Encoding parameter with a value of `binary` in each 
-    part's header after the first (Statements) part.
-    * <a name="1.5.2.s2.b2.b5"></a>SHOULD only include one copy of an Attachment's data when the same Attachment is used 
-    in multiple Statements that are sent together.
-    * <a name="1.5.2.s2.b2.b6"></a>SHOULD include a Content-Type parameter in each part's header. For the first part 
-    (containing the Statement) this MUST be `application/json`.
-   	* <a name="1.5.2.s2.b2.b7"></a>Where parameters have a corresponding property within the attachment Object 
-   	(outlined in the table above), and both the parameter and property are specified for a given Attachment, 
-	the value of these parameters and properties MUST match. 
+* <a name="1.5.2.s2.b1"></a>タイプはapplication/jsonでなければならず、各アタッチメントのfileUrlを含まなければならない（ただし、"attachments "フィルタが`false`の場合はStatement resultsを除く）。
+* <a name="1.5.2.s2.b2"></a>それは、[RFC 2046](https://www.ietf.org/rfc/rfc2046.txt)の「multipart/mixed」の定義に準拠しなければならない(MUST)し、また:
+    * <a name="1.5.2.s2.b2.b1"></a>マルチパートドキュメントの最初の部分は、Statementそのものを、`application/json`タイプで含まなければならない(MUST)。
+    * <a name="1.5.2.s2.b2.b2"></a>マルチパート文書の最初のパートは、Application/jsonタイプでStatements自体を含まなければならない(MUST)。追加の各パートは、Attachmentの生データを含み、Statementの論理パートを形成する。この機能は、Statement Resource に対して PUT または POST リクエストを発行する際に利用可能である。
+    * <a name="1.5.2.s2.b2.b3"></a>最初の(Statement)パートの後の各パートのヘッダーにX-Experience-API-Hashパラメータを含めなければならない(MUST)。
+    * <a name="1.5.2.s2.b2.b4"></a>最初の（Statements）部分の後の各部分のヘッダーに、値がbinaryであるContent-Transfer-Encodingパラメータを含めなければならない（MUST）。
+    * <a name="1.5.2.s2.b2.b5"></a>同じ添付ファイルが、一緒に送信される複数のStatementsで使用される場合、添付ファイルのデータ のコピーを1つだけ含めるべきである(SHOULD)。
+    * <a name="1.5.2.s2.b2.b6"></a>各パートのヘッダーにContent-Typeパラメータを含めるべきである(SHOULD)。最初のパート(Statementを含む)では、これは`application/json`でなければならない(MUST)。
+   	* <a name="1.5.2.s2.b2.b7"></a>パラメータがアタッチメントオブジェクト内に対応するプロパティを持ち（上記の表で概説）、パラメータとプロパティの両方が与えられたアタッチメントに対して指定される場合、これらのパラメータとプロパティの値は一致しなければならない（MUST）。
 
 ###### <a name="1.5.2.s3"></a>LRS Requirements
 
-* <a name="1.5.2.s3.b1"></a>An LRS MUST include Attachments in the Transmission Format described above
-when requested by the Client (see [Statement Resource](#stmtres)).
-* <a name="1.5.2.s3.b2"></a>An LRS MUST NOT pull Statements from another LRS without requesting Attachments.
-* <a name="1.5.2.s3.b3"></a>An LRS MUST NOT push Statements into another LRS without including Attachment data
-received, if any, for those Attachments.
-* <a name="1.5.2.s3.b4"></a>When receiving a PUT or POST with a document type of `multipart/mixed`, an LRS MUST accept batches of 
-Statements that contain Attachments in the Transmission Format described above.
-* <a name="1.5.2.s3.b5"></a>When receiving a PUT or POST with a document type of `multipart/mixed`, an LRS MUST reject batches of 
-Statements having Attachments that neither contain a fileUrl nor match a received Attachment part based on their hash.
-* <a name="1.5.2.s3.b6"></a>When receiving a PUT or POST with a document type of `multipart/mixed`, an LRS SHOULD assume a 
-Content-Transfer-Encoding of binary for Attachment parts.
-* <a name="1.5.2.s3.b7"></a>An LRS MAY reject (batches of) Statements that are larger than the LRS is configured to allow.
-* <a name="1.5.2.s3.b8"></a>When receiving a PUT or POST with a document type of `multipart/mixed`, an LRS SHOULD* accept batches 
-of Statements which contain no Attachment Objects.
-* <a name="1.5.2.s3.b9"></a>When receiving a PUT or POST with a document type of `multipart/mixed`, an LRS SHOULD* accept batches 
-of Statements which contain only Attachment Objects with a populated fileUrl.
+* <a name="1.5.2.s3.b1"></a>LRS はクライアントから要求された場合、上記の送信フォーマットに添付ファイルを含めなけれ ばならない(see [Statement Resource](#stmtres)).
+* <a name="1.5.2.s3.b2"></a>LRSは添付ファイルを要求することなく、他のLRSからステートメントを取得してはならない。
+* <a name="1.5.2.s3.b3"></a>LRS は他の LRS にステートメントをプッシュする際に、受信した添付ファイルを含めなければ ならない。 を含むことなく、ステートメントを他の LRS にプッシュしてはならない（もしあれば）。
+* <a name="1.5.2.s3.b4"></a>ドキュメントタイプが multipart/mixed である PUT または POST を受信する場合、LRS は前述の送信フォー マットで添付ファイルを含むステートメントのバッチを受け入れなければならない(MUST)。
+* <a name="1.5.2.s3.b5"></a>ドキュメントタイプが multipart/mixed の PUT または POST を受信する場合、LRS は fileUrl を含まず、受信した Attachment パートにハッシュに基づいて一致しない Attachment を有する Statements のバッチを拒否しなければならない。
+* <a name="1.5.2.s3.b6"></a>ドキュメントタイプが multipart/mixed の PUT または POST を受信する場合、LRS は添付ファイル部分の Content-Transfer-Encoding を binary と仮定するべきである(SHOULD)。
+* <a name="1.5.2.s3.b7"></a>LRSは、LRSが許可するように設定されているよりも大きなステートメントの(バッチ)を拒否してもよい。
+* <a name="1.5.2.s3.b8"></a>ドキュメントタイプが multipart/mixed である PUT または POST を受信するとき、LRS は添付オブジェクトを含まないステートメントの バッチを受け入れるべきである(SHOULD*)。
+* <a name="1.5.2.s3.b9"></a>ドキュメントタイプが multipart/mixed の PUT または POST を受信する場合、LRS は fileUrl が入力された添付オ ブジェクトのみを含むステートメントのバッチを受理すべきである(SHOULD*)。
 
-__Note:__ There is no requirement that Statement batches using the "mime/multipart" format contain Attachments.
+__Note:__ "mime/multipart "形式を使用するStatementバッチが添付ファイルを含むことは要求されていない。
 
 ###### <a name="1.5.2.s4"></a>Learning Record Provider Requirements
 
-* <a name="1.5.2.s4.b1"></a>A Learning Record Provider MAY send Statements with Attachments as described above.
-* <a name="1.5.2.s4.b2"></a>A Learning Record Provider MAY send multiple Statements where some or all have 
-Attachments if using POST.
-* <a name="1.5.2.s4.b3"></a>A Learning Record Provider MAY send batches of type `application/json` where every attachment
-Object has a fileUrl, ignoring all requirements based on the "multipart/mixed" format.
-* <a name="1.5.2.s4.b4"></a>A Learning Record Provider SHOULD use SHA-256, SHA-384, or SHA-512 to populate the "sha2" property.
+* <a name="1.5.2.s4.b1"></a>A Learning Record Providerは、上記のようにStatementsにAttachmentsを送信してもよい（MAY）。
+* <a name="1.5.2.s4.b2"></a>A Learning Record Providerは、POST を使用する場合、一部または全部が添付ファイルを持つ複数のステートメントを送信してもよい（MAY）。
+* <a name="1.5.2.s4.b3"></a>A Learning Record Providerは、"multipart/mixed "フォーマットに基づくすべての要件を無視して、すべての添付ファイルオブジェクトが fileUrl を持つ application/json タイプのバッチを送信してもよい(MAY)。
+* <a name="1.5.2.s4.b4"></a>A Learning Record Providerは、SHA-256、SHA-384、またはSHA-512を使用して、"sha2 "プロパティを入力する必要があります(SHOULD)。
 
 ###### <a name="1.5.2.s5"></a>File URL
-The File URL is intended to provide a location from which the Attachment can be received.
-There are, however, no requirements for the owner of the Attachment to make the 
-Attachment data available at the location indefinitely or to make the Attachment publically
-available without security restrictions. When determining Attachment hosting arrangements, 
-those creating Statements using the "fileUrl" property are encouraged to consider the needs of end recipient(s) 
-of the Statement, especially if the Attachment content is not included with the Statement.
+ファイルURLは、添付ファイルを受信することができる場所を提供することを意図している。しかし、添付ファイルの所有者は、その場所で添付ファイルのデータを無期限に利用できるようにすること、またはセキュリティ上の制限なしに添付ファイルを一般に公開することを要求されることはない。添付ファイルのホスティングを決定する際、"fileUrl "プロパティを使用してステートメントを作成する者は、特に 添付ファイルコンテンツがステートメントに含まれていない場合、ステートメントの最終受信者のニーズを考慮することが推奨さ れる。
 
-* <a name="1.5.2.s5.b1"></a>The Attachment data SHOULD be retrievable at the URL indicated by the fileUrl.
-* <a name="1.5.2.s5.b2"></a>The owner of the attachment MAY stop providing the attachment data at this IRL at any time. 
-* <a name="1.5.2.s5.b3"></a>Security restrictions MAY be applied to those attempting to access the Attachment data at this IRL. 
+* <a name="1.5.2.s5.b1"></a>添付ファイルのデータは、fileUrl で示される URL で取得可能であるべきである（SHOULD）。
+* <a name="1.5.2.s5.b2"></a>添付ファイルの所有者は、このIRLでの添付ファイルデータの提供をいつでも中止することができる。
+* <a name="1.5.2.s5.b3"></a>このIRLで添付ファイルデータにアクセスしようとする者には、セキュリティ上の制限が適用されてもよい。
 
-The period of time an Attachment is made available for, and the security restrictions applied to
-hosted attachments, are out of scope of this specification. 
+
+添付ファイルが利用可能になる期間や、ホストされた添付ファイルに適用されるセキュリティ制限は、本仕様の範囲外である。
 
 ###### <a name="1.5.2.s6"></a>Example
 
-Below is an example of a very simple Statement with an Attachment. Please note the following:
+以下は、添付ファイル付きの非常に単純なステートメントの例である。以下の点に注意してください。
 
-* <a name="1.5.2.s6.b1"></a>The boundary in the sample was chosen to demonstrate valid character classes;
-* <a name="1.5.2.s6.b2"></a>The selected boundary does not appear in any of the parts;
-* <a name="1.5.2.s6.b3"></a>For readability the sample attachment is of type "text/plain". Even if it had been 
-a binary type like "image/jpeg", no encoding would be done, the raw octets would be included;
-* <a name="1.5.2.s6.b4"></a>Per RFC 2046, the boundary is `<CRLF>` followed by -- followed by the boundary string 
-declared in the header.
+* <a name="1.5.2.s6.b1"></a>サンプルの境界線は、有効な文字クラスを示すために選択されています。
+選択された境界線は、どの部分にも現れません。
+* <a name="1.5.2.s6.b2"></a>選択された境界線は、どの部分にも現れません。
+* <a name="1.5.2.s6.b3"></a>読みやすくするために、サンプルの添付ファイルは「text/plain」タイプになっています。仮に「image/jpeg」のようなバイナリタイプであったとしても、エンコーディングは行われず、生のオクテットが含まれることになります。
+* <a name="1.5.2.s6.b4"></a>RFC2046によると、境界は`<CRLF>`の後に--が続き、その後にヘッダーで宣言された境界文字列が続きます。
 
-__Note:__ Don't forget the ```<CRLF>```  when building or parsing these messages.
+__Note:__ これらのメッセージを構築または解析する際には、```<CRLF>```を忘れないようにしてください。
 
 Headers:
 
@@ -424,29 +361,19 @@ here is a simple attachment
 <a name="datatransfer"></a> <a name="resources"></a>
 ## <a name="2.0">2.0</a> Resources
 
-The LRS is interacted with via RESTful HTTP methods to the resources outlined in this section.
-The Statement Resource can be used by itself to track learning records. Other resources provide
-additional functionality. 
+LRS は RESTful HTTP メソッドを介して、このセクションで概要を説明するリソースと対話します。ステートメントリソースは、それ自体で学習記録を追跡するために使用することができます。他のリソースは追加機能を提供します。
 
-An LRS will support all of the resources described in this section. It's also possible
-for a tool which is not an LRS to choose to follow the LRS requirements of one or 
-more of the resources and methods described in this section. For example a tool might
-implement POST Statements for the purposes of receiving incoming Statements forwarded by an LRS.
-Such a system is not considered to be an LRS or 'partial LRS'; it is simply not an LRS. 
+LRSはこのセクションで説明したリソースを全てサポートする。LRSでないツールは、このセクションで説明されているリソースとメソッドの1つ以上のLRS要件に従うことを選択することも可能である。例えば、あるツールはLRSから転送される受信ステートメントを受信する目的でPOSTステートメントを実装するかもしれない。このようなシステムは、LRSまたは "部分的LRS "とはみなされない。
 
-__Note:__ In all of the example endpoints where xAPI resources are located given in the specification, `http://example.com/xAPI/` 
-is the example base endpoint of the LRS. All other IRI syntax after this represents the particular resource used. 
-A full list of the endpoints is included in [Appendix B: Table of All Resources](#Appendix3B).
+__Note:__ 本仕様で示されるxAPIリソースが配置されるすべてのエンドポイント例において、`http://example.com/xAPI/` 
+はLRSのベースエンドポイントの例である。これ以降の他の全てのIRI構文は、使用される特定のリソースを表している。エンドポイントの完全なリストは、[Appendix B: Table of All Resources](#Appendix3B)全リソースの表に含まれている。
 
 ###### <a name="2.0.s1"></a>Requirements
 
-* <a name="2.0.s1.b1"></a>The LRS MUST support all of the resources described in this section. 
-* <a name="2.0.s1.b2"></a>If the LRS implements OAuth 1.0, the LRS MUST also support all of the OAuth resources 
-described in [OAuth Authorization Scope](#oauthscope).
-* <a name="2.0.s1.b3"></a>The LRS MAY support additional resources not described in this specification. 
-* <a name="2.0.s1.b4"></a>Past, current and future versions of this specification do not and will not define endpoints 
-with path segments starting with `extensions/`. LRSs supporting additional resources not defined in this specification SHOULD 
-define their endpoints with path segments starting with `extensions/`.
+* <a name="2.0.s1.b1"></a>LRS はこのセクションで説明されるすべてのリソースをサポートしなければならない（MUST）。
+* <a name="2.0.s1.b2"></a>LRS が OAuth 1.0 を実装している場合、LRS は[OAuth Authorization Scope](#oauthscope)に記述されている全ての OAuth リソースもサポートしなければならない。 
+* <a name="2.0.s1.b3"></a>LRS は本仕様に記載されていない追加リソースをサポートしてもよい（MAY）
+* <a name="2.0.s1.b4"></a>この仕様の過去、現在、未来のバージョンでは、`extensions/` で始まるパスセグメントを持つエンドポイントは定義されていませんし、今後も定義されないでしょう。この仕様で定義されていない追加のリソースをサポートする LRS は、`extensions/` で始まるパスセグメントを持つエンドポイントを定義するべきである(SHOULD)。
 
 <a name="stmtres"></a> 
 
@@ -812,13 +739,10 @@ voiding Statement, which cannot be voided.
 ### <a name="2.2">2.2</a> Document Resources 
 
 ##### <a name="2.2.s1"></a>Description
-The Experience API provides a facility for Learning Record Providers to save arbitrary data in 
-the form of documents, perhaps related to an Activity, Agent, or combination of both.
+Experience APIは、Learning Record Providerが任意のデータをドキュメントの形で保存するための機能を提供するもので、アクティビティ、エージェント、またはその両方の組み合わせに関連している可能性があります。
 
 ##### <a name="2.2.s2"></a>Details
-Note that the following table shows generic properties, not a JSON Object as many other tables 
-in this specification do. The id is stored in the IRL, "updated" is HTTP header information, and 
-"contents" is the HTTP document itself (as opposed to an Object).
+以下の表は一般的なプロパティを示しており、この仕様の他の多くの表のようなJSONオブジェクトではないことに注意してください。id は IRL に格納され、"updated" は HTTP ヘッダー情報、"contents" は (Object とは対照的に) HTTP ドキュメントそのものです。
 <table>
 	<tr><th>Property</th><th>Type</th><th>Description</th></tr>
 	<tr id="2.2.s2.table1.row1"><td>id</td><td>String</td><td>Set by Learning Record Provider, unique within the scope 
@@ -1393,28 +1317,22 @@ required by [Versioning](#versioning).
 
 ###### <a name="3.0.s1"></a>Description
 
-The function of the LRS within the xAPI is to store and retrieve Statements. As long as it has sufficient information 
-to perform these tasks, it is expected that it does them. Validation of Statements in the Experience API is focused 
-solely on syntax, not semantics. Enforcing the rules that ensure valid meaning among Verb definitions, Activity types, 
-and extensions is the responsibility of the Learning Record Provider sending the Statement. 
+xAPI内のLRSの機能は、Statementsを保存し、取り出すことである。これらのタスクを実行するのに十分な情報がある限り、それを実行することが期待される。Experience APIにおけるStatementsの検証は、セマンティクスではなくシンタックスにのみ焦点が当てられている。Verb定義、Activityタイプ、および拡張機能の間で有効な意味を保証するルールを実施することは、Statementを送信するLearning Record Providerの責任です。
 
 ###### <a name="3.0.s2"></a>Requirements
 
-* <a name="3.0.s2.b1"></a>The LRS SHOULD enforce rules regarding structure. 
-* <a name="3.0.s2.b2"></a>The LRS SHOULD NOT enforce rules regarding meaning.  
+* <a name="3.0.s2.b1"></a>LRSは構造に関するルールを適用するべきである（SHOULD）。
+* <a name="3.0.s2.b2"></a>LRSは意味に関するルールを適用すべきではない。
 
 <a name="concurrency"></a>
 
 ### <a name="3.1">3.1</a> Concurrency
 
 ##### <a name="3.1.s1"></a>Description
-Concurrency control makes certain that a client does not PUT, POST or DELETE documents based on old
-data into an LRS.
+同時実行性制御は、クライアントがLRSに古いデータに基づく文書をPUT、POST、DELETEしないようにする。
 
 ##### <a name="3.1.s2"></a>Details
-xAPI will use HTTP 1.1 entity tags ([ETags](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19))
-to implement optimistic concurrency control in the portions of the API where PUT, POST or DELETE might
-overwrite or remove existing data, being:
+xAPI は、PUT、POST、DELETE が既存のデータを上書きしたり削除したりする可能性のある API の部分において、HTTP 1.1 エンティティタグ  ([ETags](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19))) を使用して楽観的な同時実行制御を実装します。
 
 * <a name="3.1.s2.b1"></a>State Resource
 * <a name="3.1.s2.b2"></a>Agent Profile Resource 
@@ -1482,43 +1400,21 @@ If a PUT request is received without either header for a resource that already e
 
 ##### <a name="3.2.s1"></a>Description
 
-This specification defines requirements, some of which are imposed on the LRS to accept or reject requests,
-return responses and perform other behaviors in certain conditions. In cases where an LRS is required 
-to reject a request, the appropriate error code is listed as part of the requirement. 
+本仕様は，LRS が特定の条件下で，リクエストの受理又は拒否，応答の返却，その他の動作を行うために課される要件を定義する。LRS がリクエストの拒否を要求される場合、適切なエラーコードが要求事項の一部として記載される。
 
-None of these requirements contradict the idea that the LRS is also allowed to be configurable to reject requests 
-and respond or behave differently on the basis of conditions that are out of scope this specification. 
+これらの要件はいずれも、LRSが本仕様の範囲外である条件に基づいて、リクエストを拒否し、応答を返す、または異なる動作をするように設定可能であることも許されるという考えと矛盾しない。 
 
-One of these conditions is permission. For example, the LRS might assign permissions to a particular set of 
-credentials such that those credentials can only issue Statements relating to a particular agent. It could then 
-reject any statements using those credentials not relating to that agent. The permissions that can be assigned 
-by an LRS are out of scope of this specification, aside from the list of recommended OAuth Authorization scope 
-values in section [4.2](#oauthscope). 
+これらの条件の1つは許可である。たとえばLRSは、特定のエージェントに関するステートメントしか発行できないように、特定のクレデンシャルセットにパーミッションを割り当てることができる。そして、そのエージェントに関連しないクレデンシャルを使用したステートメントを拒否することができる。LRSによって割り当てられる許可は、セクション[4.2](#oauthscope)の推奨OAuth Authorizationスコープ値のリストを除けば、この仕様の範囲外である。 
 
-Permissions can also affect the response returned by an LRS to GET requests. For example, 
-a set of credentials might have permission only to view Statements about a particular Actor, in which case
-the LRS will filter any returned Statements to exclude any Statements not relating to that Actor. See 
-[GET Statements](#stmtresget) for details. 
+パーミッションは、LRS が GET リクエストに対して返すレスポンスにも影響を与えることができる。たとえば、一連の認証情報は特定のアクターに関するステートメントを閲覧する権限のみを持つかもしれない。この場合、LRSは返されるステートメントをフィルタリングして、そのアクターに関連しないステートメントを除外する。 See [GET Statements](#stmtresget) for details. 
 
-In cases explicitly allowed by this specification, the credentials used can also affect the LRS behavior in 
-handling a request, for example the LRS will normally overwrite the "authority" property of a Statement, but can 
-sometimes accept a submitted authority if it has a strong trust relationship associated with the credentials 
-used to submit the Statement. See [Authority](./xAPI-Data.md#authority) for details. 
+たとえば、LRS は通常ステートメントの "authority" プロパティを上書きするが、ステートメントの提出に使用されたクレデンシャルと強い信頼関係がある場合は、提出された権限を受け入れることができる。See [Authority](./xAPI-Data.md#authority) for details. 
 
-Permissions set by an LRS could cause a technically conformant LRS to fail conformance testing. 
-This could occur where requests made by the testing software are rejected on the basis of permissions. For this reason
-the LRS needs to be configurable, or credentials used for testing need to have sufficient permissions granted,
-such that permission restrictions do not affect the result of conformance testing. 
+LRSによって設定されたパーミッションによって、技術的に適合したLRSが適合性テストに不合格になることがある。これはテスト用ソフトウェアによる要求が、パーミッションに基づき拒否される場合に起こり得る。このため、LRSは設定可能である必要があり、またはテストに使用される認証情報は、許可制限が適合性テストの結果に影響しないように、十分な許可を付与する必要がある。
 
-Another condition is where the request sent is beyond the size limits set by the LRS. It would be unreasonable
-to expect the LRS to always accept requests of any size. The LRS can choose any size limit it sees fit, but
-needs to be configurable so as not to apply size limits during conformance testing. Of course, some size limits
-will still exist during conformance testing due to limitations of hardware, etc. but it is expected that these limits
-are sufficiently high so as not to affect the running of tests. 
+もう一つの条件は、送信されたリクエストがLRSによって設定されたサイズ制限を超える場合である。LRSが常にあらゆるサイズのリクエストを受け入れることを期待するのは不合理であろう。LRSは適切と思われるサイズ制限を選択できるが、コンフォーマンステスト中にサイズ制限を適用しないように設定可能である必要がある。もちろん、ハードウェアの制限などにより、コンフォーマンステスト中にもサイズ制限は存在するが、テストの実行に影響を与えない程度に制限することが期待される。
 
-The LRS can also reject requests or revoke credentials in case of suspected malicious intent, for example
-an unexpected large number of requests made in a short period of time. It is expected that that limits 
-will be sufficiently high such that the rate of requests made during conformance testing will not trigger any rate limits.
+LRSはまた、悪意があると疑われる場合、例えば短時間に予想外の数のリクエストがあった場合、リクエストを拒否したり、クレデンシャルを失効させたりすることができます。この制限は、適合性試験中のリクエストのレートがいかなるレート制限も発動させないように、十分に高くなることが期待される。
 
 ##### <a name="3.2.s2"></a>Details
 The list below offers some general guidance on HTTP error codes that could be returned from various methods in the API. 
@@ -1616,21 +1512,15 @@ size (see above).
 
 ###### <a name="3.3.s1"></a>Rationale
 
-Future revisions of the specification might introduce changes such as properties added to Statements. Using Semantic 
-Versioning will allow Clients and LRSs to remain interoperable as the specification changes.
+将来の仕様改訂により、ステートメントにプロパティが追加されるなどの変更が加えられるかもしれません。セマンティックバージョニングを使用することで、クライアントとLRSは仕様が変更されても、相互運用性を保つことができます。
 
 ###### <a name="3.3.s2"></a>Details
 
-Starting with version 1.0.0, xAPI will be versioned according to [Semantic Versioning 1.0.0](http://semver.org/spec/v1.0.0.html).  
-Every request from a Client and every response from the LRS includes an HTTP header with the name `X-Experience-API-Version` 
-and the version as the value. For example, ``X-Experience-API-Version : 1.0.3`` for version 1.0.3; 
-see the [Revision History](./xAPI-About.md#Appendix1A) for the current version of this specification. 
+バージョン1.0.0から、xAPIは[Semantic Versioning 1.0.0](http://semver.org/spec/v1.0.0.html)に従ってバージョン管理されるようになりました。
+クライアントからのリクエストとLRSからのレスポンスには、X-Experience-API-Versionという名前のHTTPヘッダーと、その値としてバージョンが含まれます。たとえば、バージョン 1.0.3 の場合は X-Experience-API-Version : 1.0.3 となります。この仕様の現在のバージョンについては、[改訂履歴](./xAPI-About.md#Appendix1A) を参照してください。
 
-__Note:__ For patch versions of the specification later than 1.0.0, the "X-Experience-API-Version" header will not match the 
-[statement version property](./xAPI-Data.md#version) which is always `1.0.0` for all 1.0.x versions of the spec. The
-"X-Experience-API-Version" header enables the LRS and Client to determine the exact patch version of the specification being 
-followed. While no communication incompatibility should arise among 1.0.x versions, there are sometimes clarifications 
-of previously intended behavior.
+
+__Note:__ 1.0.0 より後のバージョンの仕様のパッチの場合、「X-Experience-API-Version」ヘッダーは、1.0.x のすべてのバージョンの仕様で常に`1.0.0`である[statement version property](./xAPI-Data.md#version)に一致しません。X-Experience-API-Version」ヘッダにより、LRSとクライアントは、準拠している仕様の正確なパッチバージョンを判断することができます。1.0.xバージョン間で通信の非互換性は発生しないはずですが、以前意図した動作が明確になることがあります。
 
 ###### <a name="3.3.s3"></a>LRS Requirements
 
@@ -1667,48 +1557,36 @@ described in [Appendix A: Converting Statements to 1.0.0](#Appendix3A).
 
 ###### <a name="4.0.s1"></a>Rationale
 
-In order to balance interoperability and the varying security requirements of different environments, several 
-authentication options are defined.
+相互運用性と環境ごとに異なるセキュリティ要件のバランスをとるために、いくつかの認証オプションが定義されています。
 
 ###### <a name="4.0.s2"></a>Details
-The following authentication methods are defined within the specification. Any given LRS will implement at least one 
-of these methods and might implement additional methods not defined within this specification. 
+この仕様では、以下の認証方法が定義されている。LRSはこれらのうち少なくとも1つを実装し、さらに本仕様で定義されていない方法を実装するかもしれません。
 
-* <a name="4.0.s2.b1"></a>[OAuth 1.0 (RFC 5849)](http://tools.ietf.org/html/rfc5849), with signature methods of 
-"HMAC-SHA1", "RSA-SHA1", and "PLAINTEXT"
+* <a name="4.0.s2.b1"></a>[OAuth 1.0 (RFC 5849)](http://tools.ietf.org/html/rfc5849)、署名方式は "HMAC-SHA1", "RSA-SHA1", "PLAINTEXT" です。
 * <a name="4.0.s2.b2"></a>[HTTP Basic Authentication](http://tools.ietf.org/html/rfc7235)
 * <a name="4.0.s2.b3"></a>Common Access Cards
 
-While Common Access Cards are defined as an authentication method within this specification, the implementation details of 
-this authentication method are not defined. The xAPI Working Group encourages LRS developers implementing Common Access Cards 
-as an authentication method to collaborate in defining the details of this authentication method in a future version of this 
-specification. 
+共通アクセスカードは、この仕様の中で認証方法として定義されていますが、この認証方法の実装の詳細は定義されていません。xAPI Working Group は、Common Access Cards を認証方式として実装する LRS 開発者が、この認証方式の詳細を本仕様の将来のバージョンで共同して定義することを推奨しています。
 
-No further details are provided in this specification to describe HTTP Basic Authentication as this authentication method
-is clearly and completely defined in [RFC 7235](http://tools.ietf.org/html/rfc7235). 
+HTTP 基本認証については、[RFC 7235](http://tools.ietf.org/html/rfc7235) で明確に定義されているため、本仕様では詳細を記述しない。
 
 ###### <a name="4.0.s3"></a>Requirements
 
-* <a name="4.0.s3.b1"></a>The LRS MUST support authentication using at least one of the authentication methods defined 
-in this specification.
+* <a name="4.0.s3.b1"></a>LRS は本仕様で定義される認証方法のうち、少なくとも 1 つを使用した認証をサポートしなければならない。
 
-* <a name="4.0.s3.b2"></a>The LRS MUST handle making, or delegating, decisions on the validity of Statements, and 
-determining what operations might be performed based on the credentials used.
+* <a name="4.0.s3.b2"></a>LRS は、ステートメントの有効性に関する判断、及び使用されたクレデンシャルに基づき実行される可能性のある操作の判断を行う、または委任しなければならない(MUST)。
 
 <a name="authdefs"></a>
 
 ### <a name="4.1">4.1</a> OAuth 1.0 Authentication Scenarios and Methods
 
-The matrix and requirements below describe the possible authentication scenarios used within OAuth and recommends the 
-authentication workflow to be used in these scenarios. The process described for each scenario is not intended 
-to be comprehensive, but rather outline variations to the standard OAuth workflow. 
+以下のマトリックスと要件は、OAuth で使用される可能性のある認証シナリオと、これらのシナリオで使用される認証ワークフローを推奨しています。各シナリオで説明されているプロセスは包括的なものではなく、標準的な OAuth ワークフローのバリエーションを概説するものです。
 
-The requirements in this section only apply if the LRS supports OAuth 1.0.
+このセクションの要件は、LRS が OAuth 1.0 をサポートしている場合にのみ適用されます。
 
-A **registered application** is an application that will authenticate to the LRS as an OAuth consumer that has been 
-registered with the LRS.
+**registered application** とは、LRSに登録されたOAuthコンシューマとしてLRSに認証を行うアプリケーションのことです。
 
-A **known user** is a user account on the LRS, or on a system which the LRS trusts to define users.
+**known user**とは、LRS上のユーザアカウント、またはLRSがユーザを定義するために信頼するシステム上のユーザを指します。
 
 
 <table border="1">
@@ -1906,18 +1784,12 @@ as query string or form parameters, not in the OAuth header.
 
 ## <a name="5.0">5.0</a> Security 
 
-Security beyond authentication (including the interpretation of OAuth authorization scopes) is beyond the current 
-scope of this document and left to the individual LRS provider as an implementation detail. Implementors are encouraged 
-to follow industry best practices, e.g., [The HTTPS-Only Standard](https://https.cio.gov) from the office of the White House CIO.
+認証以外のセキュリティ(OAuthの認可範囲の解釈を含む)については、このドキュメントの現在の範囲を超えており、実装の詳細として個々のLRSプロバイダに任されています。実装者は業界のベストプラクティス、例えばホワイトハウスCIO事務所のThe  [The HTTPS-Only Standard](https://https.cio.gov)に従うことが推奨される。
 
-It is possible that security concerns may arise in the implementation of this specification, and implementers might choose to break a 
-conformance requirement for the sake of security. In these cases, implementers are encouraged to consider both the security and 
-interoperability implications of their implementation decisions. In any case, the LRS will still need to be configurable such that it
-is able to pass conformance tests. 
+この仕様の実装において、セキュリティ上の懸念が生じる可能性があり、実装者はセキュリティのために適合性要件を破ることを選択する可能性がある。このような場合、実装者はその実装の決定がセキュリティと相互運用性の両方に影響することを考慮することが推奨される。どのような場合でも、LRSは適合性テストに合格するように設定可能である必要があることに変わりはない。
 
-While other security concerns are beyond the scope of this specification, the xAPI Community remains dedicated to determining 
-security best practices. This effort has begun at [xAPIsec](https://github.com/xapisec/xapisec). 
-Participation is highly encouraged.
+他のセキュリティの懸念はこの仕様の範囲外であるが、xAPIコミュニティはセキュリティのベストプラクティスを決定することに専念している。この努力は[xAPIsec](https://github.com/xapisec/xapisec)で始まっている。参加は強く推奨される。
+
 
 <a name="append3"></a>
 ## <a name="5.0.s1"></a>Appendices
