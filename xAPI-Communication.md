@@ -381,7 +381,8 @@ __Note:__ 本仕様で示されるxAPIリソースが配置されるすべての
 
 ###### <a name="2.1.s1"></a>Description
 
-The basic communication mechanism of the Experience API.  
+The basic communication mechanism of the Experience API.
+Experience API の基本的な通信機構です。
 
 <a name="stmtresput"></a>
 
@@ -391,7 +392,7 @@ The basic communication mechanism of the Experience API.
 
 Example endpoint: `http://example.com/xAPI/statements`
 
-Stores a single Statement with the given id. POST can also be used to store single Statements.
+指定されたIDのStatementを1つ格納します。POSTも単一のStatementを格納するために使用することができます。
 
 **Content:** The Statement object to be stored. 
 
@@ -405,27 +406,19 @@ Stores a single Statement with the given id. POST can also be used to store sing
 
 ###### <a name="2.1.1.s2"></a>LRS Requirements
 
-* <a name="2.1.1.s2.b1"></a>The LRS MAY respond before Statements that have been stored are available for retrieval.
+* <a name="2.1.1.s2.b1"></a>LRSは、保存されたStatementが検索可能になる前に応答してもよい(MAY)。
 
-* <a name="2.1.1.s2.b2"></a>An LRS MUST NOT make any modifications to its state based on receiving a Statement
-with a statementId that it already has a Statement for. Whether it responds with `409 Conflict` or `204 No Content`, 
-it MUST NOT modify the Statement or any other Object.
+* <a name="2.1.1.s2.b2"></a>LRSは、すでにステートメントを持っているstatementIdのステートメントを受信したことに基づいて、そのステートにいかなる修正も加えてはならない(MUST NOT)。`409 Conflict`または`204 No Content`応答しようとも、ステートメントまたは他のオブジェクトを修正してはならない(MUST NOT)。
 
-* <a name="2.1.1.s2.b3"></a>If the LRS receives a Statement with an id it already has a Statement for, it SHOULD
-verify the received Statement matches the existing one and SHOULD return `409 Conflict` if they
-do not match. See [Statement comparison requirements](./xAPI-Data.md#statement-comparison-requirements).
+* <a name="2.1.1.s2.b3"></a>LRSが既に持っているステートメントIDを持つステートメントを受信した場合、受信したステートメントが既存のものと一致することを確認すべきであり、一致しない場合は`409 Conflict`を返さなければならない（SHOULD）。[Statement comparison requirements](./xAPI-Data.md#statement-comparison-requirements)参照。
 
-* <a name="2.1.1.s2.b4"></a>If the LRS receives a batch of Statements containing two or more Statements with the same id, 
-it SHOULD* reject the batch and return `400 Bad Request`.
-
-
+* <a name="2.1.1.s2.b4"></a>LRSが同じidを持つ2つ以上のStatementを含むStatementのバッチを受信した場合、バッチを拒否し、`400 Bad Request`を返すべきである
 
 ###### <a name="2.1.1.s3"></a>Learning Record Provider Requirements
 
-* <a name="2.1.1.s3.b1"></a>Learning Record Providers SHOULD POST Statements including the Statement "id" property 
-instead of using PUT. 
-* <a name="2.1.1.s3.b2"></a>When PUTing Statements, the "id" property of the Statement SHOULD be used. 
-* <a name="2.1.1.s3.b3"></a>Where provided, the "id" property of the Statement MUST match the "statementId" parameter of the request. 
+* <a name="2.1.1.s3.b1"></a>学習記録プロバイダは、PUTを使用する代わりに、ステートメント「id」プロパティを含むステートメントをPOSTすべきです（SHOULD）。
+* <a name="2.1.1.s3.b2"></a>ステートメントをPUTする場合、ステートメントの "id "プロパティを使用すべきです。
+* <a name="2.1.1.s3.b3"></a>ステートメントの "id "プロパティは、リクエストの "statementId "パラメータと一致しなければならない（MUST）。
 
 <a name="stmtrespost"></a>
 
@@ -433,29 +426,23 @@ instead of using PUT.
 
 ###### <a name="2.1.2.s1"></a>Details
 
-Example endpoint: `http://example.com/xAPI/statements`
+エンドポイント例： `http://example.com/xAPI/statements`
 
-Stores a Statement, or a set of Statements.
+ステートメント、またはステートメントのセットを保存します。
 
-**Content:** An array of Statements or a single Statement to be stored. 
+**Content:** Statementの配列、または格納される1つのStatement。
 
-**Returns:** `200 OK`, Array of Statement id(s) (UUID) in the same order as the corresponding stored Statements.  
+**Returns:** `200 OK`, 200 OK、格納されたステートメントと同じ順序のステートメントID(UUID)の配列。
 
 ###### <a name="2.1.2.s2"></a>Requirements
 
-* <a name="2.1.2.s2.b1"></a>The LRS MAY respond before Statements that have been stored are available for retrieval.
-* <a name="2.1.2.s2.b2"></a>GET Statements MAY be called using POST and form parameters if necessary as query strings 
-have limits. See [Alternate Request Syntax](#alt-request-syntax) for more details.
-* <a name="2.1.2.s2.b3"></a>The LRS MUST differentiate a POST to add a Statement or to list Statements based on the 
-parameters passed. See [Alternate Request Syntax](#alt-request-syntax) for more details.
-* <a name="2.1.2.s2.b4"></a>An LRS MUST NOT make any modifications to its state based on receiving a Statement
-with an id that it already has a Statement for. Whether it responds with `409 Conflict` or `204 No Content`, 
-it MUST NOT modify the Statement or any other Object.
-* <a name="2.1.2.s2.b5"></a>If the LRS receives a Statement with an id it already has a Statement for, it SHOULD
-verify the received Statement matches the existing one and SHOULD return `409 Conflict` if they
-do not match. See [Statement comparison requirements](./xAPI-Data.md#statement-comparison-requirements).
-* <a name="2.1.2.s2.b6"></a>If the LRS receives a batch of Statements containing two or more Statements with the same id, 
-it SHOULD* reject the batch and return `400 Bad Request`.
+* <a name="2.1.2.s2.b1"></a>MAY:LRSは、保存されたステートメントが検索可能になる前に応答してもよい。
+* <a name="2.1.2.s2.b2"></a>GETステートメントは、クエリ文字列には制限があるため、必要に応じてPOSTとフォームパラメータを使用して呼び出すことができます（MAY）。See [Alternate Request Syntax](#alt-request-syntax) for more details.
+* <a name="2.1.2.s2.b3"></a>LRSは、渡されたパラメータに基づいてStatementを追加したり、Statementを一覧表示するためにPOSTを区別しなければならない(MUST)。See [Alternate Request Syntax](#alt-request-syntax) for more details.
+* <a name="2.1.2.s2.b4"></a>LRSは、すでにステートメントを持っているIDのステートメントを受信したことに基づいて、そのステートにいかなる修正も加えてはならない(MUST NOT)。`409 Conflict`または`204 No Content`で応答しても、ステートメントまたは他のオブジェクトを修正してはならない(MUST NOT)。
+* <a name="2.1.2.s2.b5"></a>LRSが既に持っているidを持つステートメントを受信した場合、受信したステートメントが既存のものと一致することを確認すべきであり、一致しない場合は`409 Conflict`を返すべきである（SHOULD）。
+See [Statement comparison requirements](./xAPI-Data.md#statement-comparison-requirements).
+* <a name="2.1.2.s2.b6"></a>LRSが同じidを持つ2つ以上のStatementを含むStatementのバッチを受信した場合、バッチを拒否し、`400 Bad Request`を返すべきである(SHOULD*)。
 
 <a name="stmtresget"></a>
 
@@ -465,12 +452,9 @@ it SHOULD* reject the batch and return `400 Bad Request`.
 
 Example endpoint: `http://example.com/xAPI/statements`
 
-This method is called to fetch a single Statement or multiple Statements. If the statementId or voidedStatementId parameter 
-is specified a single Statement is returned.
+このメソッドは、単一のステートメントまたは複数のステートメントをフェッチするために呼び出されます。statementId または voidedStatementId パラメータが指定されている場合は、単一のステートメントが返されます。
 
-Otherwise returns: A [StatementResult](./xAPI-Data.md#retrieval) Object, a list of Statements in reverse chronological order based 
-on "stored" time, subject to permissions and maximum list length. If additional results are available, an IRL to 
-retrieve them will be included in the StatementResult Object.
+それ以外の場合は、以下を返します： [StatementResult](./xAPI-Data.md#retrieval)オブジェクト。"stored "時間に基づく逆時系列順のStatementのリストで、権限とリストの最大長に従います。追加の結果が利用可能な場合、それらを取得するための IRL が StatementResult Object に含まれます。
 
 **Content:** None.
 
@@ -497,17 +481,12 @@ retrieve them will be included in the StatementResult Object.
 		<td>agent</td>
 		<td>Agent or Identified Group Object (JSON)</td>
 		<td> </td>
-		<td>Filter, only return Statements for which the specified Agent or Group is 
-		the Actor or Object of the Statement.
+		<td>Filter,指定されたエージェントまたはグループがステートメントのアクターまたはオブジェクトであるステートメントのみを返します。
 			<ul>
 				<li> 
-					Agents or Identified Groups are equal when the same 
-					Inverse Functional Identifier is used in each Object compared and 
-					those Inverse Functional Identifiers have equal values.
+					エージェントまたは識別されたグループは、比較された各オブジェクトで同じ逆機能識別子が使用され、それらの逆機能識別子が同じ値を持つ場合に等しくなります。
 				</li><li>
-					For the purposes of this filter, Groups that have members 
-					which match the specified Agent	based on their Inverse Functional
-					Identifier as described above are considered a match
+					このフィルタでは、上記のように逆機能識別子に基づいて指定されたエージェントに一致するメンバーを持つグループは、一致すると見なされます。
 				</li>
 			</ul>
 			<br><br>See <a href="./xAPI-Data.md#actor">agent/group</a> Object definition
@@ -519,7 +498,7 @@ retrieve them will be included in the StatementResult Object.
 		<td>verb</td>
 		<td>Verb id (IRI)</td>
 		<td> </td>
-		<td>Filter, only return Statements matching the specified Verb id.</td>
+		<td>フィルタリングを行い、指定したVerb idに一致するStatementのみを返す。</td>
 		<td>Optional</td>
 	</tr>
 	<tr id="2.1.3.s1.table1.row5">
@@ -527,8 +506,7 @@ retrieve them will be included in the StatementResult Object.
 		<td>Activity id (IRI)</td>
 		<td> </td>
 		<td>
-			Filter, only return Statements for which the Object of the Statement is 
-			an Activity with the specified id.
+			フィルタリングにより、ステートメントのオブジェクトが指定されたIDを持つアクティビティであるステートメントのみを返します。
 		</td>
 		<td>Optional</td>
 	</tr>
@@ -537,11 +515,7 @@ retrieve them will be included in the StatementResult Object.
 		<td>UUID</td>
 		<td> </td>
 		<td>
-			Filter, only return Statements matching the specified registration 
-			id. Note that although frequently a unique registration will be used 
-			for one Actor assigned to one Activity, this cannot be assumed. 
-			If only Statements for a certain Actor or Activity are required, 
-			those parameters also need to be specified.
+			指定された登録IDに一致するステートメントのみを返すフィルタです。1つのアクターに1つのアクティビティが割り当てられた場合、一意の登録が使用されることがよくありますが、これを仮定することはできませんのでご注意ください。特定のアクターやアクティビティのステートメントだけが必要な場合は、それらのパラメータも指定する必要があります。
 		</td>
 		<td>Optional</td>
 	</tr>
@@ -550,11 +524,7 @@ retrieve them will be included in the StatementResult Object.
 		<td>Boolean</td>
 		<td>false</td>
 		<td>
-			Apply the Activity filter broadly. Include Statements for which the Object,
-			any of the  context Activities, or any of those properties in a contained
-			SubStatement match the Activity parameter, instead of that parameter's 
-			normal behavior. Matching is defined in the same way it is for the 
-			"activity" parameter.
+			Activity フィルタを広く適用します。オブジェクト、コンテキストのアクティビティ、または含まれるSubStatementのこれらのプロパティのいずれかがActivityパラメータと一致するStatementを、パラメータの通常の動作の代わりに含めます。マッチングは、"activity "パラメータと同じように定義されます。
 		</td>
 		<td>Optional</td>
 	</tr>
@@ -563,11 +533,7 @@ retrieve them will be included in the StatementResult Object.
 		<td>Boolean</td>
 		<td>false</td>
 		<td>
-			Apply the Agent filter broadly. Include Statements for which 
-			the Actor, Object, Authority, Instructor, Team,
-			or any of these properties in a contained SubStatement match the Agent parameter,
-			instead of that parameter's normal behavior. Matching is defined in the same way
-			it is for the "agent" parameter.
+			Agent フィルタを広く適用します。SubStatementに含まれるActor、Object、Authority、Instructor、Team、またはこれらのプロパティのいずれかがAgentパラメータと一致するStatementを、パラメータの通常の動作の代わりに含めることができます。マッチングは、"agent "パラメータと同じように定義されます。
 		</td>
 		<td>Optional</td>
 	</tr>
@@ -575,14 +541,14 @@ retrieve them will be included in the StatementResult Object.
 		<td>since</td>
 		<td>Timestamp</td>
 		<td> </td>
-		<td>Only Statements stored since the specified Timestamp (exclusive) are returned.</td>
+		<td>指定されたタイムスタンプ（排他的）以降に保存されたステートメントのみが返されます。</td>
 		<td>Optional</td>
 	</tr>
 	<tr id="2.1.3.s1.table1.row10">
 		<td>until</td>
 		<td>Timestamp</td>
 		<td> </td>
-		<td>Only Statements stored at or before the specified Timestamp are returned.</td>
+		<td>指定されたタイムスタンプ以前に保存されたステートメントのみが返されます。</td>
 		<td>Optional</td>
 	</tr>
 	<tr id="2.1.3.s1.table1.row11">
@@ -590,8 +556,7 @@ retrieve them will be included in the StatementResult Object.
 		<td>Nonnegative Integer</td>
 		<td>0</td>
 		<td>
-			Maximum number of Statements to return. 0 indicates return the 
-			maximum the server will allow.
+			返すステートメントの最大数。0 は、サーバーが許可する最大数を返すことを示します。
 		</td>
 		<td>Optional</td>
 	</tr>
@@ -599,19 +564,12 @@ retrieve them will be included in the StatementResult Object.
 		<td>format</td>
 		<td>String: (<code>ids</code>, <code>exact</code>, or <code>canonical</code>)</td>
 		<td>exact</td>
-		<td>If <code>ids</code>, only include minimum information necessary in Agent, Activity, Verb 
-			and Group Objects to identify them. For Anonymous Groups this means including 
-			the minimum information needed to identify each member. 
+		<td>
+			<code>ids</code>がある場合は、エージェント、アクティビティ、動詞、グループオブジェクトに、それらを識別するために必要な最小限の情報のみを含める。匿名グループの場合は、各メンバーを識別するために必要な最小限の情報を含めることを意味します。
 			<br/><br/>
-			If <code>exact</code>, return Agent, Activity, Verb and Group Objects populated exactly as they 
-			were when the Statement was received. An LRS requesting Statements for the purpose 
-			of importing them would use a format of "exact" in order to maintain 
-			<a href="./xAPI-Data.md#statement-immutability-and-exceptions">Statement Immutability</a>.  
+			<code>exact</code>な場合は、エージェント、アクティビティ、動詞、およびグループオブジェクトを、ステートメントを受信したときと同じように入力して返却します。ステートメントをインポートする目的でステートメントを要求するLRSは、<a href="./xAPI-Data.md#statement-immutability-and-exceptions">Statement Immutability</a>を維持するため、"exact "の形式を使用する。
 			<br/><br/>
-			If <code>canonical</code>, return Activity Objects and Verbs populated with the canonical
-			definition of the Activity Objects and Display of the Verbs as determined by the LRS, after
-			applying the <a href="#queryLangFiltering">language filtering process defined below</a>,
-			and return the original Agent and Group Objects as in "exact" mode.  
+			<code>canonical</code>の場合、<a href="#queryLangFiltering">以下に定義されるlanguage filtering process</a>を適用した後、LRSが決定したアクティビティオブジェクトの正規の定義と動詞の表示で、アクティビティオブジェクトと動詞を入力し、元のエージェントオブジェクトとグループオブジェクトを「正確」モードで返します。
 		</td>
 		<td>Optional</td>
 	</tr>
