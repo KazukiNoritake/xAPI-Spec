@@ -575,16 +575,14 @@ Example endpoint: `http://example.com/xAPI/statements`
 	</tr>
 	<tr id="2.1.3.s1.table1.row13">
 		<td>attachments</td><td>Boolean</td><td>false</td>
-		<td>If <code>true</code>, the LRS uses the multipart response format and includes all attachments as 
-		described previously.  If <code>false</code>, the LRS sends the prescribed response with Content-Type 
-		application/json and does not send attachment data.</td>
+		<td><code>true</code>の場合、LRSはマルチパート応答形式を使用し、前述のようにすべての添付ファイルを含めます。<code>false</code>,の場合、LRS は Content-Type application/json で所定の応答を送信し、添付データを送信しません。</td>
 		<td>Optional</td>
 	</tr>
 	<tr id="2.1.3.s1.table1.row14">
 		<td>ascending</td>
 		<td>Boolean</td>
 		<td>false</td>
-		<td>If <code>true</code>, return results in ascending order of stored time</td>
+		<td><code>true</code>の場合、保存された時間の昇順で結果を返す</td>
 		<td>Optional</td>
 	</tr>
 </table>
@@ -592,105 +590,65 @@ Example endpoint: `http://example.com/xAPI/statements`
 __Note:__ The values of Boolean parameters are represented as `true` or `false` as in JSON.
 ###### <a name="2.1.3.s2"></a>Requirements
 
-* <a name="2.1.3.s2.b1"></a>The LRS MUST reject with a `400 Bad Request` error any requests to this resource 
-which contain both statementId and voidedStatementId parameters
+* <a name="2.1.3.s2.b1"></a>LRS は、statementId と voidedStatementId の両方のパラメータを含むこのリソースへのリクエストを `400 Bad Request` エラーで拒否しなければならない。(MUST)
 
-* <a name="2.1.3.s2.b2"></a>The LRS MUST reject with an `400 Bad Request` error any requests to this resource which 
-contain statementId or voidedStatementId parameters, and also contain any other parameter besides "attachments" or "format".
+* <a name="2.1.3.s2.b2"></a>LRSは、statementIdまたはvoidedStatementIdパラメータを含み、かつ「attachments」または「format」以外のパラメータを含むこのリソースへのリクエストを、`400 Bad Request`エラーで拒否しなければならない。(MUST)
 
-* <a name="2.1.3.s2.b3"></a>The LRS MAY apply additional query filter criteria based on permissions associated
-with the credentials used. 
+* <a name="2.1.3.s2.b3"></a>LRSは、使用されたクレデンシャルに関連するパーミッションに基づいて、追加のクエリフィルタ基準を適用してもよい（MAY）。
 
-* <a name="2.1.3.s2.b4"></a>In the event that no Statements are found matching the query filter criteria, the LRS MUST still return 
-`200 OK` and a [StatementResult](./xAPI-Data.md#retrieval) Object. In this case, the "statements" property will contain an empty array.
+* <a name="2.1.3.s2.b4"></a>クエリフィルタ基準に一致するStatementsが見つからない場合でも、LRSは`200 OK`と[StatementResult](./xAPI-Data.md#retrieval)Objectを返さなければならない(MUST)。この場合、"states "プロパティには空の配列が含まれる。
 
-* <a name="2.1.3.s2.b5"></a>The LRS MUST include the header "X-Experience-API-Consistent-Through", in 
-[ISO 8601 combined date and time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations) format, 
-on all responses to Statements Resource requests, with a value of the timestamp for which all Statements that have or will have a 
-"stored" property before that time are known with reasonable certainty to be available for retrieval. This time SHOULD take 
-into account any temporary condition, such as excessive load, which might cause a delay in Statements becoming available 
-for retrieval. It is expected that this will be a recent timestamp, even if there are no recently received Statements. 
+* <a name="2.1.3.s2.b5"></a>LRS は、Statement Resource リクエストに対するすべてのレスポンスに、[ISO 8601 combined date and time](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)  の日付と時刻を組み合わせた形式のヘッダー "X-Experience-API-Consistent-Through" を含めなければならない（このヘッダーの値は、その時間以前に "stored" プロパティを持つ、または持つ予定のすべての Statement が、検索に使用できることが妥当な確度でわかっているタイムスタンプである）。この時間は、Statementsが検索に利用できるようになるのを遅らせる原因となる、過度の負荷などの一時的な状態を考慮に入れるべきである（SHOULD）。最近受信したStatementがない場合でも、これは最近のタイムスタンプであることが期待される。
+The LRS MUST include the header "X-Experience-API-Consistent-Through", in 
 
-* <a name="2.1.3.s2.b6"></a>If the "attachment" property of a GET Statement is used and is set to `true`, the LRS MUST 
-use the multipart response format and include all Attachments as described in [Part Two](./xAPI-Data.md#attachments).
+* <a name="2.1.3.s2.b6"></a>GETステートメントの "attachment "プロパティが使用され、`true`に設定されている場合、LRSはマルチパート応答形式を使用し、[Part Two](./xAPI-Data.md#attachments)に記載されているように全ての添付ファイルを含めなければならない(MUST)。
 
-* <a name="2.1.3.s2.b7"></a>If the "attachment" property of a GET statement is used and is set to `false`, the LRS MUST NOT
-include Attachment raw data and MUST report `application/json`.
+* <a name="2.1.3.s2.b7"></a>GETステートメントのattachmentプロパティが使用され、`false`に設定された場合、LRSはAttachmentの生データを含んではならず、`application/jsonを報告しなければならない(MUST)。
 
-* <a name="2.1.3.s2.b8"></a>The LRS SHOULD* include a "Last-Modified" header which matches the "stored" Timestamp 
-of the Statement. 
+* <a name="2.1.3.s2.b8"></a>LRSはステートメントの "stored "タイムスタンプと一致する "Last-Modified "ヘッダを含めるべきである(SHOULD*)。
 
 <a name="queryStatementRef"></a>
 
-###### <a name="2.1.3.s3"></a>Filter Conditions for StatementRefs
+###### <a name="2.1.3.s3"></a>StatementRefのフィルタ条件
 
-This section outlines rules by which Statements targeting other Statements can sometimes be considered to 
-meet the filter conditions of a query even if they do not match the original query's filter parameters. 
-These rules **do not** apply when retrieving a single Statement using "statementId" or "voidedStatementId" query 
-parameters.
+このセクションでは、他のステートメントを対象とするステートメントが、元のクエリのフィルタ・パラメータと一致しない場合でも、クエリのフィルタ条件を満たすと見なされる場合があるルールの概要を説明します。これらのルールは、「statementId」または「voidedStatementId」クエリパラメータを使用して1つのStatementを取得する場合には適用**されません**。
 
-'Targeting Statements' means that one Statement (the targeting Statement) includes the Statement id of another
-Statement (the targeted Statement) as a Statement Reference as the Object of the Statement. 
+'Targeting Statements'とは、あるステートメント（対象ステートメント）が、ステートメントのオブジェクトとしてのステートメント参照として、別のステートメント（対象ステートメント）のステートメントIDを含むことを意味します。
 
-For filter parameters which are not time or sequence based (that is, other than "since", "until", or "limit"), 
-Statements which target another Statement (by using a StatementRef as the Object of the Statement) will meet the 
-filter condition if the targeted Statement meets the filter condition.
+時間またはシーケンスに基づかないフィルタパラメータ（つまり、「since」、「until」、「limit」以外）の場合、別のステートメントをターゲットとするステートメントは（ステートメントのオブジェクトとしてStatementRefを使用することにより）、ターゲットとなるステートメントがフィルタ条件を満たしていればフィルタ条件を満たすことになります。
 
-The time and sequence based parameters MUST still be applied to the Statement making the StatementRef in this manner. 
-This rule applies recursively, so that "Statement a" is a match when a targets b which targets c and the filter 
-conditions described above match for "Statement c".
+時間およびシーケンスに基づくパラメータは、この方法でStatementRefを作成するStatementに適用されなければならない（MUST）。このルールは再帰的に適用され、「ステートメントa」は、aがbをターゲットとし、それがcをターゲットとし、「ステートメントc」に対して上述のフィルタ条件が一致する場合に一致することになる。
 
-For example, consider the Statement 'Ben passed explosives training', and a follow up
-Statement: "Andrew confirmed <StatementRef to original Statement\>". The follow up
-Statement will not mention 'Ben' or 'explosives training', but when fetching Statements
-with an Actor filter of 'Ben' or an Activity filter of 'explosives training', both
-Statements match and will be returned so long as they fall into the time or sequence
-being fetched.
+例えば、「Ben passed explosives training」というStatementと、それに続くStatementを考えてみましょう： 「Andrewは<StatementRef to original Statement>を確認した」とする。フォローアップ・ステートメントには「Ben」や「explosives training」の記述はありませんが、アクター・フィルターが「Ben」、アクティビティ・フィルターが「explosives training」のステートメントをフェッチすると、フェッチした時間またはシーケンスに該当する限り、両方のステートメントがマッチして返されます。
 
-__Note:__ StatementRefs used as a value of the "Statement" property within Context do not affect how
-Statements are filtered.
+__Note:__ Context内の "Statement "プロパティの値として使用されるStatementRefは、Statementのフィルタリング方法には影響しません。
 
 <a name="queryLangFiltering"></a>
 
-###### <a name="2.1.3.s4"></a>Language Filtering Requirements for Canonical Format Statements
+###### <a name="2.1.3.s4"></a>Language Filtering Requirements for Canonical Format Statements(カノニカルフォーマットステートメントの言語フィルタリング要件)
 
-* <a name="2.1.3.s4.b1"></a>Activity Objects contain Language Map Objects within their "name", "description" and various 
-interaction components. The LRS MUST return only one language in each of these maps. 
+* <a name="2.1.3.s4.b1"></a>アクティビティオブジェクトは、"name"、"description"、様々なインタラクションコンポーネント内にLanguage Map Objectsを含む。LRSは、これらのマップのそれぞれにおいて、1つの言語のみを返さなければならない（MUST）。
 
-* <a name="2.1.3.s4.b2"></a>The LRS MAY maintain canonical versions of language maps against any IRI identifying an object containing
-language maps. This includes the language map stored in the Verb's "display" property and potentially some 
-language maps used within extensions. 
+* <a name="2.1.3.s4.b2"></a>LRSは、言語マップを含むオブジェクトを識別するあらゆるIRIに対して、言語マップの正規版を維持してもよい（MAY）。これにはVerbの "display "プロパティに格納されている言語マップや、拡張機能内で使用される言語マップも含まれる可能性がある。
 
-* <a name="2.1.3.s4.b3"></a>If the LRS maintains a canonical version of a language map, it SHOULD* return this canonical language map
- when canonical format is used to retrieve Statements. 
+* <a name="2.1.3.s4.b3"></a>LRSが言語マップの正規版を保持している場合、Statementsを取得するためにcanonicalフォーマットが使用されたときに、この正規版の言語マップを返すべきである（SHOULD*）。
 
-* <a name="2.1.3.s4.b4"></a>The LRS SHOULD* return only one language within each language map for which it returns a canonical map. 
+* <a name="2.1.3.s4.b4"></a>LRSは、カノニカルマップを返す各言語マップの中で、1つの言語のみを返すべきである(SHOULD*)。 
 
-* <a name="2.1.3.s4.b5"></a>In order to choose the most relevant language, the LRS MUST apply the "Accept-Language" header as 
-described in [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html) 
-(HTTP 1.1), except that this logic MUST be applied to each language map individually to select 
-which language entry to include, rather than to the resource (list of Statements) as a whole.
+* <a name="2.1.3.s4.b5"></a>最も関連性の高い言語を選択するために、LRSは[RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)(HTTP 1.1)に記述されている「Accept-Language」ヘッダーを適用しなければならないが、この論理はリソース（ステートメントのリスト）全体ではなく、どの言語項目を含めるかを選択するために各言語マップに対して個別に適用しなければならない（MUST）。
 
 <a name="voidedStatements"></a>
 
 ##### <a name="2.1.4">2.1.4</a> Voided Statements
-[Part Two](./xAPI-Data.md#voided) describes the process by which Statements can be voided. This section
-describes how voided Statements are handled by the LRS when queried. 
+[Part Two](./xAPI-Data.md#voided) では、ステートメントを無効化するためのプロセスについて説明する。本節では、無効化されたステートメントがLRSに照会された際にどのように処理されるかを説明する。
 
-Clients can identify the presence and Statement id of any voided Statements by the target of the voiding Statement. 
-Aside from debugging tools, many Learning Record Consumers will not want to display voiding Statements to their users 
-and will not display these as part of activity streams and other reports. 
+クライアントは、無効化されたステートメントのターゲットによって、その存在とステートメントIDを特定することができます。デバッグツールは別として、多くの学習記録コンシューマは無効化されたステートメントをユーザに表示したくないと考え、アクティビティストリームや他のレポートの一部として表示しません。
 
 ###### <a name="2.1.4.s1"></a>Requirements
 
-* <a name="2.1.4.s1.b1"></a>The LRS MUST not return any Statement which has been voided, unless that Statement has been 
-requested by voidedStatementId. The process described in [the section on filter conditions for StatementRefs](#queryStatementRef) 
-is no exception to this requirement. The process of retrieving voiding Statements is to request each 
-individually by voidedStatementId.
+* <a name="2.1.4.s1.b1"></a>LRS は、voidedStatementId によって要求された Statement を除き、無効化された Statement を返してはならない(MUST)。[StatementRefのフィルタ条件に関するセクション](#queryStatementRef)で説明したプロセスは、この要求に対する例外ではない。無効化されたStatementを取得するプロセスは、voidedStatementIdによってそれぞれを個別に要求することである。
 
-* <a name="2.1.4.s1.b2"></a>The LRS MUST still return any Statements targeting the voided Statement, following the process 
-and conditions described in [the section on filter conditions for StatementRefs](#queryStatementRef). This includes the 
-voiding Statement, which cannot be voided. 
+* <a name="2.1.4.s1.b2"></a>LRSは、[StatementRefのフィルタ条件のセクション](#queryStatementRef)で説明したプロセスと条件に従って、無効化されたStatementを対象としたStatementを返さなければならない。これには、無効にできない無効化ステートメントも含まれる。
 
 <a name="doctransfer"></a>
 
