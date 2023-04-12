@@ -1255,59 +1255,44 @@ xAPI は、PUT、POST、DELETE が既存のデータを上書きしたり削除�
 * <a name="3.1.s2.b3"></a>Activity Profile Resource
 
 ##### <a name="3.1.s3"></a>Client Requirements
-The State Resource will permit PUT, POST and DELETE requests without concurrency headers, since state conflicts
-are unlikely. The requirements below only apply to Agent Profile Resource and Activity Profile Resource.
+State Resourceは、状態の競合が起こりにくいため、同時実行ヘッダを持たないPUT、POST、DELETEリクエストを許可する。以下の要件は、エージェントプロファイルリソースとアクティビティプロファイルリソースにのみ適用される。
 
-* <a name="3.1.s3.b1"></a>A Client making a PUT request to either the Agent Profile Resource or Activity Profile 
-Resource MUST include the "[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)" header or the 
-[If-None-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26) header.
+* <a name="3.1.s3.b1"></a>エージェントプロファイルリソースまたはアクティビティプロファイルリソースにPUT要求を行うクライアントは、"[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)"ヘッダーまたは[If-None-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26)ヘッダーを含めなければならない（MUST）。
 
-* <a name="3.1.s3.b2"></a>A Client making a POST request to either the Agent Profile Resource or Activity Profile 
-Resource SHOULD* include the "[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)" header or the 
-[If-None-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26) header.
+* <a name="3.1.s3.b2"></a>
+エージェントプロファイルリソースまたはアクティビティプロファイルリソースに POST リクエストを行うクライアントは、"[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)"ヘッダーまたは [If-None-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26) ヘッダーを含めるべきである（SHOULD*）
 
-* <a name="3.1.s3.b3"></a>A Client making a DELETE request to either the Agent Profile Resource or Activity Profile 
-Resource SHOULD* include the "[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)" header.
+* <a name="3.1.s3.b3"></a>エージェントプロファイルリソースまたはアクティビティプロファイルリソースに対して DELETE リクエストを行うクライアントは、"[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)"ヘッダーを含めるべきである（SHOULD*）。
 
-* <a name="3.1.s3.b4"></a>Clients SHOULD* use the ETag value provided by the LRS rather than calculating it themselves. 
+* <a name="3.1.s3.b4"></a>クライアントは、LRSが提供するETag値を自分で計算するのではなく、使用すべきです。（SHOULD*）
 
 ##### <a name="3.1.s4"></a>LRS Requirements
 
-* <a name="3.1.s4.b1"></a>An LRS responding to a GET request MUST add an ETag HTTP header to the response.
-* <a name="3.1.s4.b2"></a>An LRS responding to a GET request without using a transfer encoding or using the identity 
-transfer encoding MUST calculate the value of the ETag header to be a hexadecimal string of the SHA-1 digest of the contents. 
-This hexadecimal string SHOULD be rendered using numbers and lowercase characters only; uppercase characters SHOULD NOT be used. 
-The requirement to calculate the ETag this way will be removed in a future version of the specification.
-* <a name="3.1.s4.b3"></a>An LRS responding to a GET request using any non-identity transfer encoding MUST NOT calculate 
-the included ETag as above, due to the interpretation of ETags by existing web infrastructure.
-* <a name="3.1.s4.b4"></a>As defined in [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19), 
-an LRS responding to a GET request MUST enclose the header in quotes.  
-* <a name="3.1.s4.b5"></a>An LRS responding to a PUT request MUST handle the "[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)" header as described in RFC2616, HTTP 1.1 if 
-it contains an ETag, in order to detect modifications made after the Client last fetched the document.
-* <a name="3.1.s4.b6"></a>An LRS responding to a PUT request MUST handle the "[If-None-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26)" header as described in 
-RFC2616, HTTP 1.1 if it contains "*", in order to to detect when there is a resource present that the Client is not aware of.
-* <a name="3.1.s4.b7"></a>An LRS responding to a POST or DELETE request SHOULD* handle the "[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)" header as described in RFC2616, HTTP 1.1 
-if it contains an ETag, in order to detect modifications made after the Client last fetched the document.
-* <a name="3.1.s4.b8"></a>An LRS responding to a POST request SHOULD* handle the 
-"[If-None-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26)" header as described in RFC2616, HTTP 1.1 if it 
-contains "*", in order to to detect when there is a resource present that the Client is not aware of.
+* <a name="3.1.s4.b1"></a>GET リクエストに応答する LRS は、レスポンスに ETag HTTP ヘッダを追加しなければならない(MUST)。
+* <a name="3.1.s4.b2"></a>転送エンコーディングを使用せず、またはID転送エンコーディングを使用せずにGETリクエストに応答するLRSは、ETagヘッダーの値をコンテンツのSHA-1ダイジェストの16進数文字列として計算しなければなりません（MUST）。この16進文字列は、数字と小文字のみを使用して表示されるべきであり、大文字は使用すべきではない(SHOULD NOT)。この方法でETagを計算する要件は、仕様の将来のバージョンで削除される予定です。
+* <a name="3.1.s4.b3"></a>非同一転送エンコーディングを使用するGETリクエストに応答するLRSは、既存のウェブインフラによるETagの解釈のため、上記のように含まれるETagを計算してはならない（MUST NOT）。
+* <a name="3.1.s4.b4"></a>[RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19)で定義されているように、GETリクエストに応答するLRSはヘッダーを引用符で囲まなければならない(MUST)。
+* <a name="3.1.s4.b5"></a>PUTリクエストに応答するLRSは、クライアントが最後にドキュメントを取得した後に行われた変更を検出するために、ETagを含む場合はRFC2616、HTTP1.1に記載されているように"[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)"ヘッダーを処理しなければなりません。
+* <a name="3.1.s4.b6"></a>PUTリクエストに応答するLRSは、クライアントが認識していないリソースが存在することを検出するために、RFC2616、HTTP1.1に記述されている"[If-None-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26)"ヘッダーに「*」を含む場合、これを処理しなければならない(MUST)。
+* <a name="3.1.s4.b7"></a>POSTまたはDELETEリクエストに応答するLRSは、クライアントが最後にドキュメントを取得した後に行われた変更を検出するために、RFC2616、HTTP1.1に記述されているように、"[If-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.24)"ヘッダーにEタグが含まれていれば処理すべきですSHOULD*。
+* <a name="3.1.s4.b8"></a>POSTリクエストに応答するLRSは、クライアントが認識していないリソースが存在することを検出するために、RFC2616、HTTP1.1に記述されている"[If-None-Match](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.26)"ヘッダーに「*」を含む場合、これを処理すべきですSHOULD*。
 
-If the header precondition in either of the PUT request cases above fails, the LRS:
+上記のPUTリクエストのいずれかのケースでヘッダーの前提条件が失敗した場合、LRSは：
 
-* <a name="3.1.s4.b9"></a>MUST return HTTP status `412 Precondition Failed`.
-* <a name="3.1.s4.b10"></a>MUST NOT make a modification to the resource. 
+* <a name="3.1.s4.b9"></a>MUST return HTTP status `412 Precondition Failed`。.
+* <a name="3.1.s4.b10"></a>MUST NOT リソースに変更を加えてはならない。
 
-If the header precondition in any of the POST or DELETE request cases above fails, the LRS:
+上記の POST または DELETE リクエストのいずれかのヘッダー前提条件が失敗した場合、LRSは：
 
 * <a name="3.1.s4.b11"></a>SHOULD* return HTTP status `412 Precondition Failed`.
 * <a name="3.1.s4.b12"></a>SHOULD* NOT make a modification to the resource. 
 
-If a PUT request is received without either header for a resource that already exists, the LRS:
+既に存在するリソースに対して、いずれかのヘッダを持たないPUTリクエストを受信した場合、LRSは：
 
 * <a name="3.1.s4.b13"></a>MUST return HTTP status `409 Conflict`.
-* <a name="3.1.s4.b14"></a>MUST return a response explaining that the Learning Record Provider SHOULD
-	* <a name="3.1.s4.b14.b1"></a>check the current state of the resource.
-	* <a name="3.1.s4.b14.b2"></a>set the "If-Match" header with the current ETag to resolve the conflict.
+* <a name="3.1.s4.b14"></a>MUST 学習記録プロバイダは以下のことを説明する応答を返さなければならない。
+	* <a name="3.1.s4.b14.b1"></a>リソースの現在の状態を確認します。
+	* <a name="3.1.s4.b14.b2"></a>競合を解決するために、"If-Match "ヘッダーに現在のETagを設定する。
 * <a name="3.1.s4.b15"></a>MUST NOT make a modification to the resource.
 
 <a name="errorcodes"></a> 
@@ -1333,94 +1318,63 @@ LRSによって設定されたパーミッションによって、技術的に�
 LRSはまた、悪意があると疑われる場合、例えば短時間に予想外の数のリクエストがあった場合、リクエストを拒否したり、クレデンシャルを失効させたりすることができます。この制限は、適合性試験中のリクエストのレートがいかなるレート制限も発動させないように、十分に高くなることが期待される。
 
 ##### <a name="3.2.s2"></a>Details
-The list below offers some general guidance on HTTP error codes that could be returned from various methods in the API. 
+以下のリストは、APIの様々なメソッドから返される可能性のあるHTTPエラーコードの一般的なガイダンスを提供します。
 
-* <a name="3.2.s2.b1"></a>`400 Bad Request` - Indicates
-an error condition caused by an invalid or missing argument. The term 
-"invalid arguments" includes malformed JSON or invalid Object structures.
+* <a name="3.2.s2.b1"></a>`400 Bad Request` - 無効な引数または欠落した引数によって引き起こされるエラー状態を示します。無効な引数」という用語には、不正なJSONや無効なObject構造も含まれます。
 
-* <a name="3.2.s2.b2"></a>`401 Unauthorized` - Indicates that authentication is required, or in the 
-case authentication has been posted in the request, that the given credentials have been refused.
+* <a name="3.2.s2.b2"></a>`401 Unauthorized` - 認証が必要であること、または認証がリクエストに含まれている場合、与えられた認証が拒否されたことを示します。
 
-* <a name="3.2.s2.b3"></a>`403 Forbidden` - Indicates that the request is unauthorized for the given 
-credentials. Note this is different than refusing the credentials given. In this case, the credentials 
-have been validated, but the authenticated Client is not allowed to perform the given action.
+* <a name="3.2.s2.b3"></a>`403 Forbidden` - 指定された認証情報に対してリクエストが許可されていないことを示します。これは、与えられたクレデンシャルを拒否するのとは異なることに注意してください。この場合、認証情報は検証されたが、認証されたクライアントは指定されたアクションの実行を許可されない。
 
-* <a name="3.2.s2.b4"></a>`404 Not Found` - Indicates the requested resource was not found. May be 
-returned by any method that returns a uniquely identified resource, for instance, any State, Agent Profile, 
-or Activity Profile Resource request targeting a specific document, or the method to retrieve a single Statement.
+* <a name="3.2.s2.b4"></a>`404 Not Found` - 要求されたリソースが見つからなかったことを示す。例えば、特定のドキュメントを対象としたステート、エージェントプロファイル、アクティビティプロファイルリソース要求や、単一のステートメントを取得するメソッドなど、一意に識別されるリソースを返すメソッドによって返されることがある。
 
-* <a name="3.2.s2.b5"></a>`409 Conflict` - Indicates an error condition due to a conflict with the 
-current state of a resource, in the case of State Resource, Agent Profile Resource or Activity Profile Resource
-requests, or in the Statement Resource PUT or POST calls. See Section [3.1 Concurrency](#concurrency) for more details.
+* <a name="3.2.s2.b5"></a>`409 Conflict` - State Resource、Agent Profile Resource、Activity Profile Resourceの要求の場合、またはStatement ResourceのPUTまたはPOST呼び出しの場合、リソースの現在の状態との衝突によるエラー状態を示す。詳細については、セクション[3.1 Concurrency](#concurrency)を参照してください。
 
-* <a name="3.2.s2.b6"></a>`412 Precondition Failed` - Indicates an error condition due to a failure of 
-a precondition posted with the request, in the case of State or Agent Profile or Activity Profile 
-API requests. See Section [6.3 Concurrency](#concurrency) for more details.
+* <a name="3.2.s2.b6"></a>`412 Precondition Failed` - StateまたはAgent ProfileまたはActivity Profile APIリクエストの場合、リクエストと共に投稿された前提条件の失敗によるエラー状態を示す。[6.3 Concurrency](#concurrency) for more details.
 
-* <a name="3.2.s2.b7"></a>`413 Request Entity Too Large` - Indicates that the LRS has rejected the Statement or 
-document because its size (or the size of an Attachment included in the request) is larger than 
-the maximum allowed by the LRS. 
+* <a name="3.2.s2.b7"></a>`413 Request Entity Too Large` - ステートメントまたはドキュメントのサイズ(またはリクエストに含まれる添付ファイルのサイズ)がLRSが許容する最大値より大きいため、LRSが拒否したことを示します。
 
-* <a name="3.2.s2.b8"></a>`429 Too Many Requests` - Indicates that the LRS has rejected the request because it 
-has received too many requests from the Client or set of credentials in a given amount of time. 
+* <a name="3.2.s2.b8"></a>`429 Too Many Requests` - 指定された時間内にクライアントまたは認証情報のセットから受信した リクエストの数が多すぎるため、LRSがリクエストを拒否したことを示します。
 
-* <a name="3.2.s2.b9"></a>`500 Internal Server Error` - Indicates a general error condition, typically an 
-unexpected exception in processing on the server.
+* <a name="3.2.s2.b9"></a>`500 Internal Server Error` - 一般的なエラー状態を示し、通常、サーバー上の処理で予期せぬ例外が発生する。
 
 ##### <a name="3.2.s3"></a>Requirements
 
-* <a name="3.2.s3.b1"></a>An LRS MUST return the error code most appropriate to the error condition from the list above.
+* <a name="3.2.s3.b1"></a>LRS は上記のリストの中から、エラー状態に最も適したエラーコードを返さなければならない(MUST)。
 
-* <a name="3.2.s3.b2"></a>An LRS SHOULD return a message in the response explaining the cause of the error.
+* <a name="3.2.s3.b2"></a>LRS は応答の中で、エラーの原因を説明するメッセージを返すべきである(SHOULD)。
 
-* <a name="3.2.s3.b3"></a>An LRS SHOULD use content negotiation as described in [RFC 7231](http://tools.ietf.org/html/rfc7231#section-5.3) to decide the format of the error.
+* <a name="3.2.s3.b3"></a>LRS は[RFC 7231](http://tools.ietf.org/html/rfc7231#section-5.3)に記述されているようにコンテントネゴシエーションを使用して、エラーの形式を決定すべきです（SHOULD）。
 
-* <a name="3.2.s3.b4"></a>An LRS SHOULD allow for plain text, HTML, and JSON responses for errors (using content negotiation).
+* <a name="3.2.s3.b4"></a>LRS はエラーに対して、プレーンテキスト、HTML、JSON のレスポンスを許可すべきです（コンテントネゴシエーションを使用します）。
 
-* <a name="3.2.s3.b5"></a>A Learning Record Provider SHOULD send an "Accept" header with requests to enable content negotiation.
+* <a name="3.2.s3.b5"></a>学習記録プロバイダは、コンテンツネゴシエーションを有効にするためのリクエストで「Accept」ヘッダを送るべきである(SHOULD)。
 
-* <a name="3.2.s3.b6"></a>The LRS SHOULD* reject any request with `400 Bad Request` status where the content type header 
-does not match the content included in the request or where the structure of the request does not match the structure 
-outlined in this specification for a particular content type. For example, if the content of the request is formatted as JSON, 
-the content type is expected to be `application/json`. If the content type is application/x-www-form-urlencoded it is expected 
-that the request will include a method parameter as outlined in [Alternate Request Syntax](#alt-request-syntax).
+* <a name="3.2.s3.b6"></a>LRSは、コンテンツタイプヘッダーがリクエストに含まれるコンテンツと一致しない場合、またはリクエストの構造が特定のコンテンツタイプについてこの仕様で概説されている構造と一致しない場合、`400 Bad Request`ステータスであらゆるリクエストを拒否すべきですSHOULD*。例えば、リクエストのコンテンツがJSONとしてフォーマットされている場合、コンテンツタイプは`application/json`であることが期待されます。コンテンツタイプがapplication/x-www-form-urlencodedの場合、リクエストは[Alternate Request Syntax](#alt-request-syntax)に概説されているようにmethodパラメータを含むと予想されます。
 
-* <a name="3.2.s3.b7"></a>The LRS MUST reject with `400 Bad Request` status any requests that use any parameters which the LRS 
-does not recognize in their intended context in this specification. 
-( __Note:__ LRSs MAY recognize and act on parameters not in this specification).
+* <a name="3.2.s3.b7"></a>LRSは、LRSが本仕様の意図する文脈で認識できないパラメータを使用するリクエストは、`400 Bad Request`ステータスで拒否しなければなりません(MUST)。( __Note:__ LRSはこの仕様にないパラメータを認識し、対処してもよい)。
 
-* <a name="3.2.s3.b8"></a>The LRS MUST reject with `400 Bad Request` status any requests that use any parameters 
-matching parameters described in this specification in all but case.
+* <a name="3.2.s3.b8"></a>LRSは、この仕様に記載されているパラメータと一致するパラメータを使用したリクエストを、`400 Bad Request`ステータスで拒否しなければならない(MUST)。
 
-* <a name="3.2.s3.b9"></a>The LRS MUST reject a batch of statements if any Statement within that batch is rejected.
+* <a name="3.2.s3.b9"></a>LRSは、バッチ内のステートメントが拒否された場合、そのバッチを拒否しなければならない(MUST)。
 
-* <a name="3.2.s3.b10"></a>The LRS MUST reject with `403 Forbidden` status any request rejected by the LRS where the 
-credentials associated with the request do not have permission to make that request. 
+* <a name="3.2.s3.b10"></a>LRS は、LRS が拒否したリクエストのうち、そのリクエストに関連するクレデンシャルがそのリクエストを行う許可を持たないものについては、`403 Forbidden` ステータスで拒否しなければならない(MUST)。
 
-* <a name="3.2.s3.b11"></a>The LRS MUST reject with `413 Request Entity Too Large` status any request rejected by the LRS 
-where the size of the Attachment, Statement or document is larger than the maximum allowed by the LRS.
+* <a name="3.2.s3.b11"></a>LRS は、添付ファイル、ステートメント、または文書のサイズが LRS が許可する最大値より大きい場合に LRS が拒否するリクエストを `413 Request Entity Too Large` ステータスで拒否しなければならない(MUST)。
 
-* <a name="3.2.s3.b12"></a>The LRS MAY choose any Attachment, Statement and document size limits and MAY vary this limit 
-on any basis, e.g., per authority.
+* <a name="3.2.s3.b12"></a>LRSは添付ファイル、ステートメント、ドキュメントのサイズ制限を選択してもよく、この制限を権限ごとなど、任意のベースで変更してもよい。
 
-* <a name="3.2.s3.b13"></a>The LRS MUST reject with `429 Too Many Requests` status any request rejected by the LRS where 
-the request is rejected due to too many requests being received by a particular Client or set of credentials in a given 
-amount of time. 
+* <a name="3.2.s3.b13"></a>LRSは、特定のクライアントまたはクレデンシャルのセットが一定時間内に受信したリクエストの数が多すぎるためにLRSが拒否したリクエストを、`429 Too Many Requests`ステータスで拒否しなければならない。
 
-* <a name="3.2.s3.b14"></a>The LRS MAY choose any rate limit and MAY vary this limit on any basis, e.g., per authority.
+* <a name="3.2.s3.b14"></a>LRSは任意のレート制限を選択してもよく、この制限を権限ごとなど、任意の基準で変化させてもよい。
 
-The following requirements exist for the purposes of conformance testing, to ensure that any limitations or permissions 
-implemented by the LRS do not affect the running of conformance testing software. 
+以下の要件は、LRSによって実装される制限または許可が、適合性テストソフトウェアの実行に影響を与えないことを保証するために、適合性テストの目的で存在します。
 
-* <a name="3.2.s3.b15"></a>The LRS SHOULD* be configurable not to reject any requests from a particular set of credentials 
-on the basis of permissions. This set of credentials SHOULD* be used for conformance testing but MAY be deleted/deactivated 
-on live systems. 
+* <a name="3.2.s3.b15"></a>LRSは、特定のクレデンシャルセットからのリクエストを許可に基づいて拒否しないように設定可能であるべきである（SHOULD*）。この認証情報セットは、コンフォーマンステストに使用されるべきであるが、本番システムで削除/非アクティブ化してもよい（SHOULD*）。
 
-* <a name="3.2.s3.b16"></a>The LRS MUST be configurable to accept Attachments, Statements or documents of any reasonable 
-size (see above).
+* <a name="3.2.s3.b16"></a>LRSは合理的なサイズの添付ファイル、ステートメント、またはドキュメントを受け付けるよう設定可能でなければならない(上記参照)。
 
-* <a name="3.2.s3.b17"></a>The LRS MUST be configurable to accept requests at any reasonable rate. 
+* <a name="3.2.s3.b17"></a>LRSは、任意の合理的な速度でリクエストを受け付けるように設定可能でなければならない(MUST)。
 
 <a name="versioning"></a> 
 
@@ -1440,32 +1394,27 @@ __Note:__ 1.0.0 より後のバージョンの仕様のパッチの場合、「X
 
 ###### <a name="3.3.s3"></a>LRS Requirements
 
-* <a name="3.3.s3.b1"></a>The LRS MUST include the "X-Experience-API-Version" header in every response.
-* <a name="3.3.s3.b2"></a>The LRS MUST set this header to the latest patch version.
-* <a name="3.3.s3.b3"></a>The LRS MUST accept requests with a version header of `1.0` as if the version header was `1.0.0`.
-* <a name="3.3.s3.b4"></a>The LRS MUST reject requests with version header prior to version 1.0.0 unless such requests are 
-routed to a fully conformant implementation of the prior version specified in the header.
-* <a name="3.3.s3.b4.1"></a>The LRS MUST reject requests without a version header unless such requests are 
-routed to a fully conformant 0.9 implementation.
-* <a name="3.3.s3.b5"></a>The LRS MUST accept requests with a version header starting with `1.0.` if the request is otherwise valid. 
-* <a name="3.3.s3.b6"></a>The LRS MUST reject requests with a version header of `1.1.0` or greater.
-* <a name="3.3.s3.b7"></a>The LRS MUST make these rejects by responding with a `400 Bad Request` error including a short 
-description of the problem.
+* <a name="3.3.s3.b1"></a>LRSはすべてのレスポンスに「X-Experience-API-Version」ヘッダを含めなければならない(MUST)。
+* <a name="3.3.s3.b2"></a>LRSはこのヘッダーに最新のパッチバージョンを設定しなければならない(MUST)。
+* <a name="3.3.s3.b3"></a>LRSはバージョンヘッダが`1.0`であるリクエストを、バージョンヘッダが`1.0.0`であるかのように受け入れなければなりません(MUST)。
+* <a name="3.3.s3.b4"></a>LRSは、バージョン1.0.0より前のバージョンヘッダを持つリクエストを、ヘッダで指定された以前のバージョンに完全に適合した実装にルーティングされない限り、拒否しなければならない(MUST)。
+* <a name="3.3.s3.b4.1"></a>LRSは、バージョンヘッダのないリクエストは、そのようなリクエストが0.9に完全に適合した実装にルーティングされない限り、拒否しなければならない(MUST)。
+* <a name="3.3.s3.b5"></a>LRSは、リクエストが有効であれば、`1.0.`から始まるバージョンヘッダを持つリクエストを受け入れなければならない(MUST)。
+* <a name="3.3.s3.b6"></a>LRSは`1.1.0`以上のバージョンヘッダを持つリクエストを拒否しなければならない(MUST)。
+* <a name="3.3.s3.b7"></a>LRSは、問題の短い説明を含む`400 Bad Request`エラーで応答することで、これらの拒否を行わなければならない(MUST)。
 
 ###### <a name="3.3.s4"></a>Client Requirements
 
-* <a name="3.3.s4.b1"></a>The Client MUST include the "X-Experience-API-Version" header in every request.
-* <a name="3.3.s4.b2"></a>The Client MUST set this header to the latest patch version.
-* <a name="3.3.s4.b3"></a>The Client SHOULD tolerate receiving responses with a version of `1.0.0` or greater.
-* <a name="3.3.s4.b4"></a>The Client SHOULD tolerate receiving data structures with additional properties.
-* <a name="3.3.s4.b5"></a>The Client SHOULD ignore any properties not defined in version 1.0.0 of the spec.
+* <a name="3.3.s4.b1"></a>クライアントは、すべてのリクエストに「X-Experience-API-Version」ヘッダーを含めなければならない(MUST)。
+* <a name="3.3.s4.b2"></a>クライアントは、このヘッダーを最新のパッチバージョンに設定しなければならない(MUST)。
+* <a name="3.3.s4.b3"></a>クライアントは、`1.0.0`以上のバージョンでレスポンスを受け取ることを許容すべきです(SHOULD)。
+* <a name="3.3.s4.b4"></a>クライアントは、追加のプロパティを持つデータ構造を受け取ることを許容すべきです（SHOULD）。
+* <a name="3.3.s4.b5"></a>クライアントは、仕様のバージョン1.0.0で定義されていないプロパティを無視すべきです（SHOULD）。
 
 ###### <a name="3.3.s5"></a>Conversion Requirements
 
-* <a name="3.3.s5.b1"></a>Statements of newer versions MUST NOT be converted into a prior version format, e.g., in order 
-to handle version differences.
-* <a name="3.3.s5.b2"></a>Statements of prior versions MAY be converted into a newer version only by following the methods 
-described in [Appendix A: Converting Statements to 1.0.0](#Appendix3A).
+* <a name="3.3.s5.b1"></a>新しいバージョンのステートメントは、バージョンの違いを処理するためなどに、以前のバージョンのフォーマットに変換してはならない（MUST NOT）。
+* <a name="3.3.s5.b2"></a>旧バージョンのステートメントは、「[Appendix A: Converting Statements to 1.0.0](#Appendix3A)」に記載されている方法によってのみ、より新しいバージョンに変換してもよい（MAY）。
 
 <a name="authentication"></a>
 
